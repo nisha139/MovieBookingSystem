@@ -33,8 +33,10 @@ namespace MovieBooking.Application.Features.Theater.Query.GetTheatersByMovieTitl
                 .GetAllAsync(); // Retrieve all theaters
 
             var theatersWithMovie = theaters.Where(theater =>
-                theater.Screens.Any(screen => screen.Showtimes.Any(showtime =>
-                    showtime.Movie.Title.Equals(request.Title, StringComparison.OrdinalIgnoreCase))));
+     theater.Screens.Any(screen => screen.Showtimes.Any(showtime =>
+         showtime.Movie.Title.ToLower() == request.Title.ToLower())));
+
+
             _ = theatersWithMovie ?? throw new NotFoundException("Theaters showing movie ", request.Title);
             //if (!theatersWithMovie.Any())
             //    throw new NotFoundException($"Theaters showing movie '{request.Title}'");

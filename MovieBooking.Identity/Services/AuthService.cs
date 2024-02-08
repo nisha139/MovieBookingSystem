@@ -21,9 +21,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MovieBooking.Identity.Services
-{
-    public class AuthService :IAuthService
+namespace MovieBooking.Identity.Services;
+    public class AuthService : IAuthService
     {
 
         private readonly AppIdentityDbContext _db ;
@@ -31,21 +30,25 @@ namespace MovieBooking.Identity.Services
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly JwtSettings _jwtSettings;
-        public AuthService(
-             UserManager<User> userManager,
+    private readonly IUserClaimsPrincipalFactory<User> _userClaimsPrincipalFactory;
+
+    public AuthService(
+        UserManager<User> userManager,
         IOptions<JwtSettings> jwtSettings,
         SignInManager<User> signInManager,
         AppIdentityDbContext db,
-        ICurrentUserService currentUserService) 
-        {
-            _userManager = userManager;
-            _jwtSettings = jwtSettings.Value;
-            _signInManager = signInManager;
-            _db = db;
-            _currentUserService = currentUserService;
-        }
-        #region Public Methods
-        public async Task<IResponse> AuthenticateAsync(AuthenticationRequest request)
+        ICurrentUserService currentUserService,
+        IUserClaimsPrincipalFactory<User> userClaimsPrincipalFactory)
+    {
+        _userManager = userManager;
+        _jwtSettings = jwtSettings.Value;
+        _signInManager = signInManager;
+        _db = db;
+        _currentUserService = currentUserService;
+        _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
+    }
+    #region Public Methods
+    public async Task<IResponse> AuthenticateAsync(AuthenticationRequest request)
         {
             try
             {
@@ -60,7 +63,6 @@ namespace MovieBooking.Identity.Services
                 //_userManager.Users.FirstOrDefault(x => x.NormalizedEmail == request.Email);
 
                 // Find user by email
-                // Find user by email (performing a case-insensitive search)
                 var user = await _userManager.FindByEmailAsync(request.Email);
 
 
@@ -251,4 +253,3 @@ namespace MovieBooking.Identity.Services
 
 
     }
-}
