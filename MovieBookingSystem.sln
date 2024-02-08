@@ -1,0 +1,74 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{950FB6E4-C55F-430D-9933-6F93E399535A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{34D5240D-E815-4D8E-8A18-D9F96220B527}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{2AD94021-AD9C-4A86-930F-4BA4E0A2D582}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{DEEA57A8-A63A-4EDE-B5FE-10AD82034DF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Domain", "MovieBooking.Domain\MovieBooking.Domain.csproj", "{18B9074E-C240-406A-B901-1D5D2E1F83AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Application", "MovieBooking.Application\MovieBooking.Application.csproj", "{DDAACAD3-001F-4B1A-B623-C2D3C126D77A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Identity", "MovieBooking.Identity\MovieBooking.Identity.csproj", "{994CA9EF-AE19-4F04-A8FA-4B25FCA19E48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Infrastructure", "MovieBooking.Infrastructure\MovieBooking.Infrastructure.csproj", "{C21DC6F7-7C44-424B-BD09-58F09DDEBAFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Persistence", "MovieBooking.Persistence\MovieBooking.Persistence.csproj", "{290A1308-BCB4-4DD3-AF14-7062F2F75AAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Api", "MovieBooking.Api\MovieBooking.Api.csproj", "{53AA5BBA-FCED-4611-A1EA-DBD2EA4419B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18B9074E-C240-406A-B901-1D5D2E1F83AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18B9074E-C240-406A-B901-1D5D2E1F83AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18B9074E-C240-406A-B901-1D5D2E1F83AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18B9074E-C240-406A-B901-1D5D2E1F83AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDAACAD3-001F-4B1A-B623-C2D3C126D77A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDAACAD3-001F-4B1A-B623-C2D3C126D77A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDAACAD3-001F-4B1A-B623-C2D3C126D77A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDAACAD3-001F-4B1A-B623-C2D3C126D77A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{994CA9EF-AE19-4F04-A8FA-4B25FCA19E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{994CA9EF-AE19-4F04-A8FA-4B25FCA19E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{994CA9EF-AE19-4F04-A8FA-4B25FCA19E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{994CA9EF-AE19-4F04-A8FA-4B25FCA19E48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C21DC6F7-7C44-424B-BD09-58F09DDEBAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C21DC6F7-7C44-424B-BD09-58F09DDEBAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C21DC6F7-7C44-424B-BD09-58F09DDEBAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C21DC6F7-7C44-424B-BD09-58F09DDEBAFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{290A1308-BCB4-4DD3-AF14-7062F2F75AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{290A1308-BCB4-4DD3-AF14-7062F2F75AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{290A1308-BCB4-4DD3-AF14-7062F2F75AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{290A1308-BCB4-4DD3-AF14-7062F2F75AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53AA5BBA-FCED-4611-A1EA-DBD2EA4419B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53AA5BBA-FCED-4611-A1EA-DBD2EA4419B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53AA5BBA-FCED-4611-A1EA-DBD2EA4419B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53AA5BBA-FCED-4611-A1EA-DBD2EA4419B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{34D5240D-E815-4D8E-8A18-D9F96220B527} = {950FB6E4-C55F-430D-9933-6F93E399535A}
+		{2AD94021-AD9C-4A86-930F-4BA4E0A2D582} = {950FB6E4-C55F-430D-9933-6F93E399535A}
+		{DEEA57A8-A63A-4EDE-B5FE-10AD82034DF5} = {950FB6E4-C55F-430D-9933-6F93E399535A}
+		{18B9074E-C240-406A-B901-1D5D2E1F83AC} = {2AD94021-AD9C-4A86-930F-4BA4E0A2D582}
+		{DDAACAD3-001F-4B1A-B623-C2D3C126D77A} = {2AD94021-AD9C-4A86-930F-4BA4E0A2D582}
+		{994CA9EF-AE19-4F04-A8FA-4B25FCA19E48} = {DEEA57A8-A63A-4EDE-B5FE-10AD82034DF5}
+		{C21DC6F7-7C44-424B-BD09-58F09DDEBAFF} = {DEEA57A8-A63A-4EDE-B5FE-10AD82034DF5}
+		{290A1308-BCB4-4DD3-AF14-7062F2F75AAA} = {DEEA57A8-A63A-4EDE-B5FE-10AD82034DF5}
+		{53AA5BBA-FCED-4611-A1EA-DBD2EA4419B6} = {34D5240D-E815-4D8E-8A18-D9F96220B527}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {822759CB-C005-413A-8566-4FA129DCE107}
+	EndGlobalSection
+EndGlobal
