@@ -40,6 +40,16 @@ namespace MovieBooking.Application.Features.Theater.Query.GetTheatersByMovieTitl
             _ = theatersWithMovie ?? throw new NotFoundException("Theaters showing movie ", request.Title);
             //if (!theatersWithMovie.Any())
             //    throw new NotFoundException($"Theaters showing movie '{request.Title}'");
+            if (!theatersWithMovie.Any())
+            {
+                return new ApiResponse<List<TheaterDto>>
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCodes.NotFound,
+                    Message = $"No theaters found showing movie '{request.Title}'.",
+                    Data = new List<TheaterDto>()
+                };
+            }
 
             var theaterDtos = _mapper.Map<List<TheaterDto>>(theatersWithMovie);
 
