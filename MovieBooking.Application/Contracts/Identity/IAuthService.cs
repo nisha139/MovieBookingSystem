@@ -16,5 +16,6 @@ namespace MovieBooking.Application.Contracts.Identity
         Task<IResponse> AuthenticateAsync(AuthenticationRequest request);
         Task<ApiResponse<UserDetailsDto>> GetUserDetailsAsync(string userId, CancellationToken cancellationToken);
         Task<ApiResponse<UserDetailsDto>> CreateUserAsync(CreateUserCommandRequest request, CancellationToken cancellationToken);
+        Task<ChangePasswordResponse> ChangePasswordAsync(string userId, string currentPassword, string newPassword, string confirmPassword);
     }
 }

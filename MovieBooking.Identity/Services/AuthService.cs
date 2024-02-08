@@ -60,10 +60,9 @@ namespace MovieBooking.Identity.Services;
                 {
                     throw new ArgumentException("Email is required for authentication.");
                 }
-                //_userManager.Users.FirstOrDefault(x => x.NormalizedEmail == request.Email);
 
                 // Find user by email
-                var user = await _userManager.FindByEmailAsync(request.Email);
+                var user = await _userManager.FindByEmailAsync(request.Email.ToLower());
 
 
                 // Handle case where user is not found
@@ -123,8 +122,34 @@ namespace MovieBooking.Identity.Services;
             }
         }
 
+    public async Task<ChangePasswordResponse> ChangePasswordAsync(string userId, string currentPassword, string newPassword, string confirmPassword)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
 
-        public async Task<ApiResponse<UserDetailsDto>> CreateUserAsync(CreateUserCommandRequest request, CancellationToken cancellationToken)
+        if (user == null)
+        {
+            throw new NotFoundException("User", userId);
+        }
+
+        if (newPassword != confirmPassword)
+        {
+            throw new CustomException("New password does not match the confirmed password.");
+        }
+
+        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+        if (!result.Succeeded)
+        {
+            throw new CustomException($"Failed to change password: {string.Join(",", result.Errors.Select(p => p.Description))}");
+        }
+
+        return new ChangePasswordResponse
+        {
+            Success = true,
+            Message = "Password changed successfully"
+        };
+    }
+    public async Task<ApiResponse<UserDetailsDto>> CreateUserAsync(CreateUserCommandRequest request, CancellationToken cancellationToken)
         {
             var existingUser = await _userManager.FindByEmailAsync(request.Email);
 

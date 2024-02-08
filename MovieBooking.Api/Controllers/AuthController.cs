@@ -6,6 +6,7 @@ using MovieBooking.Application.Contracts.Responses;
 using MovieBooking.Application.Features.Common;
 using MovieBooking.Application.Models.Authentication;
 using MovieBooking.Application.Models.Users;
+using System.Security.Claims;
 
 namespace MovieBooking.Api.Controllers
 {
@@ -30,6 +31,19 @@ namespace MovieBooking.Api.Controllers
         {
             return await _authService.AuthenticateAsync(request);
         }
+
+        [HttpPost("changePassword")]
+        public async Task<ActionResult<ChangePasswordResponse>> ChangePasswordAsync(ChangePasswordRequest request)
+        {
+            var userId = User.FindFirstValue("uid");
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    return Unauthorized();
+            //}
+
+            return Ok(await _authService.ChangePasswordAsync(userId, request.CurrentPassword, request.NewPassword, request.ConfirmPassword));
+        }
+
         [HttpPost("signup")]
         public async Task<ActionResult<ApiResponse<UserDetailsDto>>> SignUpAsync(CreateUserCommandRequest request)
         {
@@ -51,6 +65,7 @@ namespace MovieBooking.Api.Controllers
                 _logger.LogError(ex, "Failed to create user");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create user");
             }
+
         }
     }
 }
