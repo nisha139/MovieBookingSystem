@@ -19,9 +19,6 @@ namespace MovieBooking.Identity.Services
                                   AppIdentityDbContext db,
                                   ICurrentUserService currentUserService,
                                   IConfiguration configuration,
-
-                                  IJobService jobService,
-
                                   ICacheService cache,
                                   ICacheKeyService cacheKey) : IUserService
     {
@@ -30,7 +27,7 @@ namespace MovieBooking.Identity.Services
         private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
         private readonly ICurrentUserService _currentUserService = currentUserService;
         private readonly IConfiguration _configuration = configuration;
-        private readonly IJobService _jobService = jobService;
+       
 
         private readonly ICacheService _cache = cache;
         private readonly ICacheKeyService _cacheKey = cacheKey;

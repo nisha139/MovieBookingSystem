@@ -141,6 +141,7 @@ namespace MovieBooking.Identity.Services;
     }
     public async Task<ChangePasswordResponse> ChangePasswordAsync(string userId, string currentPassword, string newPassword, string confirmPassword)
     {
+        //RathodN13! current pass
         var user = await _userManager.FindByIdAsync(userId);
 
         if (user == null)

@@ -26,15 +26,15 @@ namespace MovieBooking.Api
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddControllers();
-            builder.Services.AddAuthorization(options =>
-            {
-                // Existing authorization policies...
+            //builder.Services.AddAuthorization(options =>
+            //{
+            //     Existing authorization policies...
 
-                options.AddPolicy("ChangePasswordPolicy", policy =>
-                {
-                    policy.RequireClaim("uid"); // Assuming you store user ID in claims
-                });
-            });
+            //    options.AddPolicy("ChangePasswordPolicy", policy =>
+            //    {
+            //        policy.RequireClaim("uid"); // Assuming you store user ID in claims
+            //    });
+            //});
 
             builder.Services.AddSwaggerGen();
 
@@ -47,7 +47,7 @@ namespace MovieBooking.Api
         public static WebApplication ConfigurePipeline(this WebApplication app)
         {
 
-            if (app.Environment.IsDevelopment() || app.Environment.ToString() == "Docker")
+            if (app.Environment.IsDevelopment() )
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
