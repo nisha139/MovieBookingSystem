@@ -26,15 +26,15 @@ namespace MovieBooking.Api.Controllers
         {
             return await Mediator.Send(new GetMovieDetailsQueryRequest(id));
         }
-        //[Authorize(Roles ="IsSuperAdmin")]
-       
+        [Authorize(Roles ="Administrator")]
         [HttpPost("Create")]
-        [MustHavePermission(Action.Create, Resource.Movie)]
+        //[MustHavePermission(Action.Create, Resource.Movie)]
         public async Task<ApiResponse<int>> CreateMovie(CreateMovieCommandRequest request)
         {
             return await Mediator.Send(request);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public async Task<ApiResponse<string>> UpdateMovie(Guid id, UpdateMovieRequestCommand request)
         {
@@ -55,7 +55,7 @@ namespace MovieBooking.Api.Controllers
         {
             return await Mediator.Send(new GetMovieListQuery() { PaginationFilter = request });
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public async Task<ApiResponse<string>> DeleteMovie(Guid id)
         {

@@ -6,11 +6,6 @@ using Microsoft.Extensions.Logging;
 using MovieBooking.Domain.Constant;
 using MovieBooking.Identity.Authorizations;
 using MovieBooking.Identity.Constants;
-
-
-//using MovieBooking.Domain.Constant;
-//using MovieBooking.Identity.Authorizations;
-//using MovieBooking.Identity.Constants;
 using MovieBooking.Identity.Models;
 
 namespace MovieBooking.Identity.Database;
