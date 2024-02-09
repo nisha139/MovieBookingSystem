@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MovieBooking.Domain.Constant;
+using MovieBooking.Identity.Authorizations;
+using MovieBooking.Identity.Constants;
+
+
 //using MovieBooking.Domain.Constant;
 //using MovieBooking.Identity.Authorizations;
 //using MovieBooking.Identity.Constants;
@@ -83,28 +88,115 @@ public class AppIdentityDbContextInitialiser(ILogger<AppIdentityDbContextInitial
     public async Task TrySeedAsync()
     {
         // Check if there are any users in the database
-        if (!_context.Users.Any())
+        try
         {
-            // Create a new user instance and set its properties
-            var user = new Identity.Models.User
-            {
-                FirstName="Admin",
-                LastName="N",
-                NormalizedUserName="N",
-                Email = "rathodnm13@gmail.com", 
-                UserName = "rathodn", 
-                PasswordHash="RathodN13!!",
-
-                                                
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await SeedRolesAsync();
+            await SeedSuperAdminUserAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while seeding the database.");
+            throw;
         }
     }
 
 
+    private async Task SeedRolesAsync()
+    {
+        foreach (string roleName in Constants.IdentityRole.DefaultRoles)
+        {
+            var r = await _roleManager.Roles.SingleOrDefaultAsync(r => r.Name == roleName);
 
+            if (await _roleManager.Roles.SingleOrDefaultAsync(r => r.Name == roleName)
+                is not Models.ApplicationRole role)
+            {
+                // Create the role
+                _logger.LogInformation("Seeding {role} Role for '{app}'.", roleName, _configuration["AppSettings:UserEmail"]);
+                role = new Models.ApplicationRole(roleName, $"{roleName}-System Defined Role");
+                await _roleManager.CreateAsync(role);
+            }
+
+            // Assign permissions
+            if (roleName == Constants.IdentityRole.Administrator)
+            {
+                await AssignPermissionsToRoleAsync(AllPermissions.Root, role);
+            }
+            else if (roleName == Constants.IdentityRole.SubAdmin)
+            {
+                await AssignPermissionsToRoleAsync(AllPermissions.Admin, role);
+            }
+            else if (roleName == Constants.IdentityRole.User)
+            {
+                await AssignPermissionsToRoleAsync(AllPermissions.User, role);
+            }
+
+        }
+    }
+    private async Task AssignPermissionsToRoleAsync(IReadOnlyList<Permission> permissions, Models.ApplicationRole role)
+    {
+        var currentClaims = await _roleManager.GetClaimsAsync(role);
+        foreach (var permission in permissions)
+        {
+            if (!currentClaims.Any(c => c.Type == IdentityRoleClaims.Permission && c.Value == permission.Name))
+            {
+                _logger.LogInformation("Seeding {role} Permission '{permission}'.", role.Name, permission.Name);
+
+                var claim = new ApplicationRoleClaim
+                {
+                    RoleId = role.Id,
+                    ClaimType = IdentityRoleClaims.Permission,
+                    ClaimValue = permission.Name,
+                    CreatedBy = "IdentityDbSeeder"
+                };
+
+                // Add the claim to the role
+                await _roleManager.AddClaimAsync(role, claim.ToClaim());
+
+                //await _roleManager.AddClaimAsync(role, new Claim(IdentityRoleClaims.Permission, Permissions.Todo.Create));
+
+                //dbContext.RoleClaims.Add(new ApplicationRoleClaim
+                //{
+                //    RoleId = role.Id,
+                //    ClaimType = CPClaims.Permission,
+                //    ClaimValue = permission.Name,
+                //    CreatedBy = "IdentityDbSeeder"
+                //});
+
+                //await dbContext.SaveChangesAsync();
+            }
+        }
+    }
+    private async Task SeedSuperAdminUserAsync()
+    {
+        if (await _userManager.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == _configuration["AppSettings:UserEmail"])
+            is not User adminUser)
+        {
+            adminUser = new User()
+            {   
+                FirstName = _configuration["AppSettings:Firstname"],
+                LastName = Roles.Administrator,
+                Email = _configuration["AppSettings:UserEmail"],
+                UserName = _configuration["AppSettings:UserEmail"],
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true,
+                IsActive = true,
+                IsSuperAdmin = true,
+                IsInvitationAccepted = true,
+            };
+
+            _logger.LogInformation("Seeding Default Admin User for '{id}'.", adminUser.Id);
+            var password = new PasswordHasher<User>();
+            adminUser.PasswordHash = password.HashPassword(adminUser, _configuration["AppSettings:UserPassword"]!.ToString());
+            await _userManager.CreateAsync(adminUser);
+        }
+
+        // Assign role to user
+        if (!await _userManager.IsInRoleAsync(adminUser, Constants.IdentityRole.Administrator))
+        {
+            _logger.LogInformation("Assigning Super Admin Role to Admin User for '{id}'.", adminUser.Id);
+            await _userManager.AddToRoleAsync(adminUser, Constants.IdentityRole.Administrator);
+        }
+    }
 
     //--- Seed all the roles in the system
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -24,8 +25,8 @@ using System.Threading.Tasks;
 namespace MovieBooking.Identity.Services;
     public class AuthService : IAuthService
     {
-
-        private readonly AppIdentityDbContext _db ;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly AppIdentityDbContext _db ;
         private readonly ICurrentUserService _currentUserService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -33,6 +34,7 @@ namespace MovieBooking.Identity.Services;
     private readonly IUserClaimsPrincipalFactory<User> _userClaimsPrincipalFactory;
 
     public AuthService(
+        IAuthorizationService authorizationService,
         UserManager<User> userManager,
         IOptions<JwtSettings> jwtSettings,
         SignInManager<User> signInManager,
@@ -40,6 +42,7 @@ namespace MovieBooking.Identity.Services;
         ICurrentUserService currentUserService,
         IUserClaimsPrincipalFactory<User> userClaimsPrincipalFactory)
     {
+        _authorizationService = authorizationService;
         _userManager = userManager;
         _jwtSettings = jwtSettings.Value;
         _signInManager = signInManager;
@@ -62,7 +65,7 @@ namespace MovieBooking.Identity.Services;
                 }
 
                 // Find user by email
-                var user = await _userManager.FindByEmailAsync(request.Email.ToLower());
+                var user = await _userManager.FindByEmailAsync(request.Email);
 
 
                 // Handle case where user is not found
@@ -121,7 +124,21 @@ namespace MovieBooking.Identity.Services;
                 };
             }
         }
+    public async Task<bool> AuthorizeAsync(string userId, string policyName)
+    {
+        var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 
+        if (user == null)
+        {
+            return false;
+        }
+
+        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+
+        var result = await _authorizationService.AuthorizeAsync(principal, policyName);
+
+        return result.Succeeded;
+    }
     public async Task<ChangePasswordResponse> ChangePasswordAsync(string userId, string currentPassword, string newPassword, string confirmPassword)
     {
         var user = await _userManager.FindByIdAsync(userId);

@@ -8,5 +8,6 @@ namespace MovieBooking.Application.Contracts.Identity
 {
     public interface IUserService
     {
+        Task<bool> HasPermissionAsync(string? userId, string permission, CancellationToken cancellationToken = default);
     }
 }
