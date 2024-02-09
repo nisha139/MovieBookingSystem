@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MovieBooking.Application.Exceptions;
 using MovieBooking.Application.Models.Authentication;
+using MovieBooking.Identity.Authorizations.Permissions;
+
 //using MovieBooking.Identity.Authorizations.Permissions;
 using MovieBooking.Identity.Database;
 using MovieBooking.Identity.Interceptors;

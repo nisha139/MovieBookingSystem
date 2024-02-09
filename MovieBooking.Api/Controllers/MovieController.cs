@@ -10,6 +10,10 @@ using MovieBooking.Application.Features.Movie.Dto;
 using MovieBooking.Application.Features.Movie.Query.GetTaskByID;
 using MovieBooking.Application.Features.Tasks.Query;
 using MovieBooking.Application.Models.Specification.Filters;
+using MovieBooking.Identity.Authorizations.Permissions;
+using MovieBooking.Identity.Authorizations;
+using Action = MovieBooking.Identity.Authorizations.Action;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieBooking.Api.Controllers
 {
@@ -22,8 +26,10 @@ namespace MovieBooking.Api.Controllers
         {
             return await Mediator.Send(new GetMovieDetailsQueryRequest(id));
         }
-
+        //[Authorize(Roles ="IsSuperAdmin")]
+       
         [HttpPost("Create")]
+        [MustHavePermission(Action.Create, Resource.Movie)]
         public async Task<ApiResponse<int>> CreateMovie(CreateMovieCommandRequest request)
         {
             return await Mediator.Send(request);

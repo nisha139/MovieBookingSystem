@@ -5,6 +5,8 @@ using MovieBooking.Persistence;
 using MovieBooking.Application;
 using MovieBooking.Application.Contracts.Application;
 using MovieBooking.InfraStructure;
+using MovieBooking.Identity.Database;
+using Microsoft.EntityFrameworkCore;
 namespace MovieBooking.Api
 {
     public  static class StartupExtensions
@@ -24,17 +26,17 @@ namespace MovieBooking.Api
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddControllers();
-            //builder.Services.AddAuthorization(options =>
-            //{
-            //    // Existing authorization policies...
+            builder.Services.AddAuthorization(options =>
+            {
+                // Existing authorization policies...
 
-            //    options.AddPolicy("ChangePasswordPolicy", policy =>
-            //    {
-            //        policy.RequireClaim("uid"); // Assuming you store user ID in claims
-            //    });
-            //});
+                options.AddPolicy("ChangePasswordPolicy", policy =>
+                {
+                    policy.RequireClaim("uid"); // Assuming you store user ID in claims
+                });
+            });
 
-            //builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen();
 
             // builder.Services.AddCorsService(builder.Configuration);
 
@@ -121,23 +123,23 @@ namespace MovieBooking.Api
         }
 
 
-        //public static async Task ResetDatabaseAsync(this WebApplication app)
-        //{
-        //    using var scope = app.Services.CreateScope();
-        //    try
-        //    {
-        //        var context = scope.ServiceProvider.GetService<MovieIdentityDbContext>();
-        //        if (context != null)
-        //        {
-        //            await context.Database.EnsureDeletedAsync();
-        //            await context.Database.MigrateAsync();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
-        //        logger.LogError(ex, "An error occurred while migrating the database.");
-        //    }
-        //}
+        public static async Task ResetDatabaseAsync(this WebApplication app)
+        {
+            using var scope = app.Services.CreateScope();
+            try
+            {
+                var context = scope.ServiceProvider.GetService<AppIdentityDbContext>();
+                if (context != null)
+                {
+                    await context.Database.EnsureDeletedAsync();
+                    await context.Database.MigrateAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+                logger.LogError(ex, "An error occurred while migrating the database.");
+            }
+        }
     }
 }

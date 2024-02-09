@@ -13,6 +13,7 @@ namespace MovieBooking.Application.Contracts.Identity
 {
     public interface IAuthService : ITransientService
     {
+        Task<bool> AuthorizeAsync(string userId, string policyName);
         Task<IResponse> AuthenticateAsync(AuthenticationRequest request);
         Task<ApiResponse<UserDetailsDto>> GetUserDetailsAsync(string userId, CancellationToken cancellationToken);
         Task<ApiResponse<UserDetailsDto>> CreateUserAsync(CreateUserCommandRequest request, CancellationToken cancellationToken);
