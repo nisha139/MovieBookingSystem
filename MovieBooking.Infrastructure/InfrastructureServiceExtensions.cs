@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MovieBooking.Application.Contracts.Application;
 using MovieBooking.Application.Interfaces;
+using MovieBooking.InfraStructure.Cors;
+using MovieBooking.InfraStructure.Mailing;
 using MovieBooking.InfraStructure.Services;
 
 namespace MovieBooking.InfraStructure;
@@ -12,9 +15,9 @@ public static class InfrastructureServiceExtensions
     {
         services
        .AddServices()
-       
+       .AddMailing(configuration)
        //.AddBackgroundJobs(configuration)
-      // .AddCaching(configuration)
+       // .AddCaching(configuration)
        .AddScoped<IDateTimeService, DateTimeService>();
     }
 

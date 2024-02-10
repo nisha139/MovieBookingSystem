@@ -1,4 +1,4 @@
-﻿namespace MovieBooking.Application.Models.Authentication;
+﻿namespace MovieBooking.Application.Models.Authentication.ChangePassword;
 public class ChangePasswordRequest
 {
     public string CurrentPassword { get; set; }
