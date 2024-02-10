@@ -1,4 +1,5 @@
 ﻿using MovieBooking.Application.Contracts.Persistence.Repositoris.Base;
+using MovieBooking.Application.Contracts.Persistence.Repositoris.Booking.Query;
 using MovieBooking.Application.Contracts.Persistence.Repositoris.Movie.Query;
 using MovieBooking.Application.Contracts.Persistence.Repositoris.Screen.Query;
 using MovieBooking.Application.Contracts.Persistence.Repositoris.Seat.Query;
@@ -101,6 +102,7 @@ namespace MovieBooking.Persistence.UnitofWork
         public IMovieQueryRepository movieQueryRepository => throw new NotImplementedException();
         public ISeatQueryRepository seatQueryRepository => throw new NotImplementedException();
         public IShowTimeQueryRepostory showTimeQueryRepostory => throw new NotImplementedException();
+        public IBookingQueryRepository bookingQueryRepository => throw new NotImplementedException();
 
         public void Dispose()
         {

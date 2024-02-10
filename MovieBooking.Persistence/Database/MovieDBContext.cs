@@ -24,12 +24,13 @@ namespace MovieBooking.Persistence.Database
         }
 
         public DbSet<Movie> Movies { get; set; }
-        //public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
         public DbSet<Screen> Screens { get; set; }
         public DbSet<Seat> seats { get; set; }
         public DbSet<Showtime> showtimes { get; set; }
         public DbSet<Theater> Theater { get; set; }
         
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);

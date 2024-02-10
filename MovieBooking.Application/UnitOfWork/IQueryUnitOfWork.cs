@@ -1,4 +1,5 @@
 ﻿using MovieBooking.Application.Contracts.Persistence.Repositoris.Base;
+using MovieBooking.Application.Contracts.Persistence.Repositoris.Booking.Query;
 using MovieBooking.Application.Contracts.Persistence.Repositoris.Movie.Query;
 using MovieBooking.Application.Contracts.Persistence.Repositoris.Screen.Query;
 using MovieBooking.Application.Contracts.Persistence.Repositoris.Seat.Query;
@@ -22,5 +23,6 @@ namespace MovieBooking.Application.UnitOfWork
         IScreenQueryRepository ScreenQueryRepository { get; }
         ISeatQueryRepository seatQueryRepository { get; }
         IShowTimeQueryRepostory showTimeQueryRepostory { get; }
+        IBookingQueryRepository bookingQueryRepository { get; }
     }
 }

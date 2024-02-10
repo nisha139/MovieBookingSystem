@@ -31,7 +31,7 @@ namespace MovieBooking.Application.Features.Movie.Command.Delete
                 Success = result > 0,
                 StatusCode = result > 0 ? HttpStatusCodes.OK : HttpStatusCodes.BadRequest,
                 Data = result.ToString(),
-                Message = result > 0 ? $"Movie {ConstantMessages.DeletedSuccessfully}" : $"{ConstantMessages.FailedToCreate} task."
+                Message = result > 0 ? $"Movie {ConstantMessages.DeletedSuccessfully}" : $"{ConstantMessages.FailedToCreate} movie."
             };
 
             return response;
