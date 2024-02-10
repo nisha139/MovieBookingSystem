@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MovieBooking.Application.Contracts.Identity;
 using MovieBooking.Application.Exceptions;
 using MovieBooking.Application.Models.Authentication;
 using MovieBooking.Identity.Authorizations.Permissions;
@@ -14,6 +15,7 @@ using MovieBooking.Identity.Authorizations.Permissions;
 using MovieBooking.Identity.Database;
 using MovieBooking.Identity.Interceptors;
 using MovieBooking.Identity.Models;
+using MovieBooking.Identity.Services;
 
 namespace MovieBooking.Identity;
 
@@ -30,6 +32,7 @@ public static class IdentityServiceExtensions
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly(typeof(AppIdentityDbContext).Assembly.FullName));
         });
+       // services.AddScoped<IUserService,UsersService>();
 
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 
