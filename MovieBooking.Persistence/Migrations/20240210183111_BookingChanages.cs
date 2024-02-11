@@ -11,92 +11,42 @@ namespace MovieBooking.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Booking_Movies_MovieId",
-                table: "Booking");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Booking_seats_SeatId",
-                table: "Booking");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Booking_showtimes_ShowtimeID",
-                table: "Booking");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Movies_Booking_BookingId",
-                table: "Movies");
+                        name: "FK_Movies_Booking_BookingId",
+                        table: "Movies");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Transaction_Booking_Id",
                 table: "Transaction");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Booking",
+            migrationBuilder.DropForeignKey(
+                name: "FK_Bookings_Movies_MovieId",
+                table: "Bookings");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Bookings_seats_SeatId",
+                table: "Bookings");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Bookings_showtimes_ShowtimeID",
+                table: "Bookings");
+
+            // Drop the foreign key constraint on 'Bookings' table, if it exists
+            migrationBuilder.DropForeignKey(
+                name: "FK_Bookings_Movies_MovieId",
+                table: "Bookings");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Booking_ShowtimeID",
                 table: "Booking");
 
-            migrationBuilder.RenameTable(
-                name: "Booking",
-                newName: "Bookings");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Booking_ShowtimeID",
-                table: "Bookings",
-                newName: "IX_Bookings_ShowtimeID");
-
-            migrationBuilder.RenameIndex(
+            migrationBuilder.DropIndex(
                 name: "IX_Booking_SeatId",
-                table: "Bookings",
-                newName: "IX_Bookings_SeatId");
+                table: "Booking");
 
-            migrationBuilder.RenameIndex(
+            migrationBuilder.DropIndex(
                 name: "IX_Booking_MovieId",
-                table: "Bookings",
-                newName: "IX_Bookings_MovieId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Bookings",
-                table: "Bookings",
-                column: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Bookings_Movies_MovieId",
-                table: "Bookings",
-                column: "MovieId",
-                principalTable: "Movies",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Bookings_seats_SeatId",
-                table: "Bookings",
-                column: "SeatId",
-                principalTable: "seats",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Bookings_showtimes_ShowtimeID",
-                table: "Bookings",
-                column: "ShowtimeID",
-                principalTable: "showtimes",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Movies_Bookings_BookingId",
-                table: "Movies",
-                column: "BookingId",
-                principalTable: "Bookings",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Transaction_Bookings_Id",
-                table: "Transaction",
-                column: "Id",
-                principalTable: "Bookings",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                table: "Booking");
         }
-
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {

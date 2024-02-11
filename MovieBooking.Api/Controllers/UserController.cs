@@ -12,18 +12,13 @@ namespace MovieBooking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController(ILogger<UserController> logger, IUserService userService, IConfiguration configuration) : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
 
-        public UserController(ILogger<UserController> logger, IUserService userService, IConfiguration configuration)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        }
+       
 
         [HttpGet("{id}")]
         public async Task<ApiResponse<UserDetailsDto>> GetByIdAsync(string id, CancellationToken cancellationToken)
