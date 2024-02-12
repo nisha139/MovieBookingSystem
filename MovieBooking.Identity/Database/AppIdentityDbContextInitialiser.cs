@@ -81,7 +81,7 @@ public class AppIdentityDbContextInitialiser(ILogger<AppIdentityDbContextInitial
     }
 
     public async Task TrySeedAsync()
-    {
+     {
         // Check if there are any users in the database
         try
         {

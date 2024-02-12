@@ -1,9 +1,7 @@
 ﻿using MovieBooking.Application.Contracts.Persistence.Repositoris.Base;
 using MovieBooking.Domain.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MovieBooking.Application.UnitOfWork
@@ -13,5 +11,8 @@ namespace MovieBooking.Application.UnitOfWork
         ICommandRepository<TEntity> CommandRepository<TEntity>() where TEntity : BaseEntity, new();
 
         Task<int> SaveAsync(CancellationToken cancellationToken);
+        Task BeginTransaction();
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
     }
 }

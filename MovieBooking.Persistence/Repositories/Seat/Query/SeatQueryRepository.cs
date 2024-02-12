@@ -40,5 +40,10 @@ namespace MovieBooking.Persistence.Repositories.Seat.Query
 
             return new PagedApiResponse<SeatListDto>(count, pageNumber, pageSize) { Data = seates };
         }
+
+        public async Task<MovieBooking.Domain.Entities.Seat> GetByIdAsync(Guid id)
+        {
+            return await context.seats.FindAsync(id);
+        }
     }
 }

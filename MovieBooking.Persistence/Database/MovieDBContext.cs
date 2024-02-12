@@ -49,11 +49,11 @@ namespace MovieBooking.Persistence.Database
                  .HasForeignKey(b => b.ShowtimeID)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Movie)
-                .WithMany()
-                .HasForeignKey(b => b.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<Booking>()
+            //    .HasOne(b => b.Movie)
+            //    .WithMany()
+            //    .HasForeignKey(b => b.Id)
+            //    .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

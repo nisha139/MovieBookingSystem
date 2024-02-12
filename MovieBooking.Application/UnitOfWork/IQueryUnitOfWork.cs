@@ -16,6 +16,7 @@ namespace MovieBooking.Application.UnitOfWork
 {
     public interface IQueryUnitOfWork
     {
+        //Task<TEntity> GetByIdAsync<TEntity>(Guid id) where TEntity : class;
         IQueryRepository<TEntity> QueryRepository<TEntity>() where TEntity : BaseEntity, new();
 
         IMovieQueryRepository movieQueryRepository { get; }

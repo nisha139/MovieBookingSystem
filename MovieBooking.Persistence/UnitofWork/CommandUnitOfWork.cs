@@ -1,14 +1,14 @@
-﻿using MovieBooking.Application.Contracts.Persistence.Repositoris.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieBooking.Application.Contracts.Persistence.Repositoris.Base;
 using MovieBooking.Application.UnitOfWork;
 using MovieBooking.Domain.Common;
 using MovieBooking.Persistence.Database;
 using MovieBooking.Persistence.Repositories.Base;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace MovieBooking.Persistence.UnitofWork
 {
@@ -16,7 +16,9 @@ namespace MovieBooking.Persistence.UnitofWork
     {
         private readonly MovieDBContext _dBContext;
         private Hashtable _repositories;
-        public CommandUnitOfWork(MovieDBContext dBContext) 
+        private TransactionScope _transactionScope;
+
+        public CommandUnitOfWork(MovieDBContext dBContext)
         {
             _dBContext = dBContext;
         }
@@ -34,21 +36,36 @@ namespace MovieBooking.Persistence.UnitofWork
 
                 _repositories.Add(type, repositoryInstance);
             }
+
             // Ensure _repositories[type] is not null before returning
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             return (ICommandRepository<TEntity>)_repositories[type] ?? new CommandRepository<TEntity>(_dBContext);
         }
 
         public void Dispose()
         {
+            _transactionScope?.Dispose();
             _dBContext.Dispose();
         }
 
         public async Task<int> SaveAsync(CancellationToken cancellationToken)
         {
-            var result = await _dBContext.SaveChangesAsync(cancellationToken);
-            return result;
+            return await _dBContext.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task BeginTransaction()
+        {
+            _transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            _transactionScope.Complete();
+            _transactionScope.Dispose();
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            _transactionScope.Dispose();
+        }
     }
 }

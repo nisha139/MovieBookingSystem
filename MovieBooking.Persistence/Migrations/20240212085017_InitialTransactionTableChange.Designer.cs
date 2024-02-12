@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieBooking.Persistence.Database;
 
@@ -11,9 +12,11 @@ using MovieBooking.Persistence.Database;
 namespace MovieBooking.Persistence.Migrations
 {
     [DbContext(typeof(MovieDBContext))]
-    partial class MovieDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240212085017_InitialTransactionTableChange")]
+    partial class InitialTransactionTableChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +28,6 @@ namespace MovieBooking.Persistence.Migrations
             modelBuilder.Entity("MovieBooking.Domain.Entities.Booking", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
@@ -48,6 +50,9 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.Property<DateTimeOffset>("ModifiedOn")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("SeatId")
                         .HasColumnType("uniqueidentifier");
@@ -387,6 +392,12 @@ namespace MovieBooking.Persistence.Migrations
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Booking", b =>
                 {
+                    b.HasOne("MovieBooking.Domain.Entities.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MovieBooking.Domain.Entities.Seat", null)
                         .WithMany("Bookings")
                         .HasForeignKey("SeatId");
@@ -396,6 +407,8 @@ namespace MovieBooking.Persistence.Migrations
                         .HasForeignKey("ShowtimeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Movie");
 
                     b.Navigation("Showtime");
                 });

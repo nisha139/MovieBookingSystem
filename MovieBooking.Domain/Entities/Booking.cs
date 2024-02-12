@@ -12,12 +12,8 @@
         public class Booking : BaseAuditableEntity
         {
             public Guid UserId { get; set; }
-            public Guid MovieId { get; set; }
             public Guid ShowtimeID { get; set; }
             public string SeatsBooked { get; set; }
-       
-            [ForeignKey("MovieId")]
-            public Movie Movie { get; set; }
 
             [ForeignKey("ShowtimeID")]
             public Showtime Showtime { get; set; }

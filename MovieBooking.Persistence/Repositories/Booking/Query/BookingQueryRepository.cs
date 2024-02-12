@@ -30,7 +30,6 @@ namespace MovieBooking.Persistence.Repositories.Booking.Query
                 {
                     Id = booking.Id,
                     UserId = booking.UserId,
-                    MovieId = booking.MovieId,
                     ShowtimeID = booking.ShowtimeID,
                     SeatsBooked = booking.SeatsBooked,
                     CreatedOn = booking.CreatedOn,
@@ -44,6 +43,8 @@ namespace MovieBooking.Persistence.Repositories.Booking.Query
 
             return new PagedApiResponse<BookingListDto>(count, pageNumber, pageSize) { Data = bookings };
         }
+
+
     }
 }
 
