@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MovieBooking.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialIdentity : Migration
+    public partial class InitialPersistanceV2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,6 +38,7 @@ namespace MovieBooking.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NoOfScreen = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
@@ -56,6 +57,7 @@ namespace MovieBooking.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TheaterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -69,8 +71,8 @@ namespace MovieBooking.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Screens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Screens_Theater_Id",
-                        column: x => x.Id,
+                        name: "FK_Screens_Theater_TheaterId",
+                        column: x => x.TheaterId,
                         principalTable: "Theater",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -81,6 +83,7 @@ namespace MovieBooking.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ScreenId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Row = table.Column<int>(type: "int", nullable: false),
                     Column = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -96,15 +99,15 @@ namespace MovieBooking.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_seats", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_seats_Screens_Id",
-                        column: x => x.Id,
+                        name: "FK_seats_Screens_ScreenId",
+                        column: x => x.ScreenId,
                         principalTable: "Screens",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Booking",
+                name: "Bookings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -123,9 +126,9 @@ namespace MovieBooking.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Booking", x => x.Id);
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Booking_seats_SeatId",
+                        name: "FK_Bookings_seats_SeatId",
                         column: x => x.SeatId,
                         principalTable: "seats",
                         principalColumn: "Id");
@@ -154,9 +157,9 @@ namespace MovieBooking.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Movies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Movies_Booking_BookingId",
+                        name: "FK_Movies_Bookings_BookingId",
                         column: x => x.BookingId,
-                        principalTable: "Booking",
+                        principalTable: "Bookings",
                         principalColumn: "Id");
                 });
 
@@ -179,9 +182,9 @@ namespace MovieBooking.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Transaction", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transaction_Booking_Id",
+                        name: "FK_Transaction_Bookings_Id",
                         column: x => x.Id,
-                        principalTable: "Booking",
+                        principalTable: "Bookings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -198,6 +201,7 @@ namespace MovieBooking.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ScreenID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -211,8 +215,8 @@ namespace MovieBooking.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_showtimes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_showtimes_Movies_Id",
-                        column: x => x.Id,
+                        name: "FK_showtimes_Movies_MovieId",
+                        column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -225,24 +229,34 @@ namespace MovieBooking.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Booking_MovieId",
-                table: "Booking",
-                column: "MovieId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Booking_SeatId",
-                table: "Booking",
+                name: "IX_Bookings_SeatId",
+                table: "Bookings",
                 column: "SeatId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Booking_ShowtimeID",
-                table: "Booking",
-                column: "ShowtimeID");
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_Bookings_ShowtimeID",
+            //    table: "Bookings",
+            //    column: "ShowtimeID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Movies_BookingId",
                 table: "Movies",
                 column: "BookingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Screens_TheaterId",
+                table: "Screens",
+                column: "TheaterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_seats_ScreenId",
+                table: "seats",
+                column: "ScreenId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_showtimes_MovieId",
+                table: "showtimes",
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_showtimes_ScreenID",
@@ -255,32 +269,31 @@ namespace MovieBooking.Persistence.Migrations
                 column: "PaymentMethodID");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Booking_Movies_MovieId",
-                table: "Booking",
-                column: "MovieId",
+                name: "FK_Bookings_Movies_Id",
+                table: "Bookings",
+                column: "Id",
                 principalTable: "Movies",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
-
-            //migrationBuilder.AddForeignKey(
-            //    name: "FK_Booking_showtimes_ShowtimeID",
-            //    table: "Booking",
-            //    column: "ShowtimeID",
-            //    principalTable: "showtimes",
-            //    principalColumn: "Id",
-            //    onDelete: ReferentialAction.Cascade);
+            migrationBuilder.AddForeignKey(
+                name: "FK_Bookings_showtimes_ShowtimeID",
+                table: "Bookings",
+                column: "ShowtimeID",
+                principalTable: "showtimes",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.NoAction);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Booking_Movies_MovieId",
-                table: "Booking");
+                name: "FK_Bookings_Movies_Id",
+                table: "Bookings");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_showtimes_Movies_Id",
+                name: "FK_showtimes_Movies_MovieId",
                 table: "showtimes");
 
             migrationBuilder.DropTable(
@@ -293,7 +306,7 @@ namespace MovieBooking.Persistence.Migrations
                 name: "Movies");
 
             migrationBuilder.DropTable(
-                name: "Booking");
+                name: "Bookings");
 
             migrationBuilder.DropTable(
                 name: "seats");

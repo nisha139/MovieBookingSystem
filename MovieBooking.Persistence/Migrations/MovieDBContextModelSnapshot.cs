@@ -25,7 +25,6 @@ namespace MovieBooking.Persistence.Migrations
             modelBuilder.Entity("MovieBooking.Domain.Entities.Booking", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
@@ -67,13 +66,11 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId");
-
                     b.HasIndex("SeatId");
 
                     b.HasIndex("ShowtimeID");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Movie", b =>
@@ -127,7 +124,7 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("BookingId");
 
-                    b.ToTable("Movies", (string)null);
+                    b.ToTable("Movies");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.PaymentMethod", b =>
@@ -167,7 +164,7 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethod", (string)null);
+                    b.ToTable("PaymentMethod");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Screen", b =>
@@ -207,7 +204,7 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("TheaterId");
 
-                    b.ToTable("Screens", (string)null);
+                    b.ToTable("Screens");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Seat", b =>
@@ -254,7 +251,7 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("ScreenId");
 
-                    b.ToTable("seats", (string)null);
+                    b.ToTable("seats");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Showtime", b =>
@@ -299,7 +296,7 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("ScreenID");
 
-                    b.ToTable("showtimes", (string)null);
+                    b.ToTable("showtimes");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Theater", b =>
@@ -342,7 +339,7 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Theater", (string)null);
+                    b.ToTable("Theater");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Transaction", b =>
@@ -381,14 +378,14 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("PaymentMethodID");
 
-                    b.ToTable("Transaction", (string)null);
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Booking", b =>
                 {
                     b.HasOne("MovieBooking.Domain.Entities.Movie", "Movie")
                         .WithMany()
-                        .HasForeignKey("MovieId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

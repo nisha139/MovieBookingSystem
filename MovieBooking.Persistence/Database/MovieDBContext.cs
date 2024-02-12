@@ -43,17 +43,17 @@ namespace MovieBooking.Persistence.Database
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            //modelBuilder.Entity<Booking>()
-            //     .HasOne(b => b.Showtime)
-            //     .WithMany(s => s.Bookings)
-            //     .HasForeignKey(b => b.ShowtimeID)
-            //    .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Booking>()
+                 .HasOne(b => b.Showtime)
+                 .WithMany(s => s.Bookings)
+                 .HasForeignKey(b => b.ShowtimeID)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<Booking>()
-            //    .HasOne(b => b.Movie)
-            //    .WithMany()
-            //    .HasForeignKey(b => b.Id)
-            //    .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Movie)
+                .WithMany()
+                .HasForeignKey(b => b.Id)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

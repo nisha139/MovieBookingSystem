@@ -55,6 +55,7 @@ namespace MovieBooking.Api.Controllers
         {
             return await Mediator.Send(new GetMovieListQuery() { PaginationFilter = request });
         }
+
         [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public async Task<ApiResponse<string>> DeleteMovie(Guid id)

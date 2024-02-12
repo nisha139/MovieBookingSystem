@@ -17,18 +17,12 @@ namespace MovieBooking.Api
         public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
         {
             AddSwagger(builder.Services);
-           //builder. Services.AddScoped<IUserService, UsersService>();
-            // Register services
-          // builder.Services.AddScoped<ICacheServic>();
-
             builder.Services.AddApplicationServices();
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddIdentityServices(builder.Configuration);
             builder.Services.AddInfrastructureSharedServices(builder.Configuration);
-            // Add the following line to register ICurrentUserService
             builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-            //builder.Services.AddScoped<IUserService, UsersService>();
-;            builder.Services.AddHttpContextAccessor();
+;           builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddControllers();
             //builder.Services.AddAuthorization(options =>

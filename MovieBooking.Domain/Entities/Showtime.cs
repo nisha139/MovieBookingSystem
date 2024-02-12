@@ -16,7 +16,7 @@ namespace MovieBooking.Domain.Entities
         [ForeignKey("ScreenID")]
         public Screen Screen { get; set; }
 
-        public List<Booking> Bookings { get; set; }
+        public virtual List<Booking> Bookings { get; set; }
        
     }
 }
