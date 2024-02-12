@@ -17,9 +17,7 @@ namespace MovieBooking.Application.Features.Booking.Command.Create
         {
             _query = query;
 
-            RuleFor(p => p.UserId)
-          .NotEmpty()
-          .WithMessage((_, name) => "UserId is required");
+          
 
             RuleFor(p => p.SeatsBooked)
                 .NotEmpty()

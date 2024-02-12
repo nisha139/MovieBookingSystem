@@ -15,5 +15,9 @@ namespace MovieBooking.Application.Features.Booking.Command.Update
         public Guid MovieId { get; set; }
         public Guid ShowtimeID { get; set; }
         public string SeatsBooked { get; set; }
+        public Guid PaymentMethodId { get; set; }
+        public decimal TransactionAmount { get; set; }
+        public string PaymentMethodName { get; set; }
+        public string PaymentMethodDescription { get; set; }
     }
 }

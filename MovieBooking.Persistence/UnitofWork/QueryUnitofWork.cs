@@ -1,4 +1,5 @@
-﻿using MovieBooking.Application.Contracts.Persistence.Repositoris.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieBooking.Application.Contracts.Persistence.Repositoris.Base;
 using MovieBooking.Application.Contracts.Persistence.Repositoris.Booking.Query;
 using MovieBooking.Application.Contracts.Persistence.Repositoris.Movie.Query;
 using MovieBooking.Application.Contracts.Persistence.Repositoris.Screen.Query;
@@ -10,6 +11,7 @@ using MovieBooking.Domain.Common;
 using MovieBooking.Persistence.Database;
 using MovieBooking.Persistence.Repositories.Base;
 using MovieBooking.Persistence.Repositories.Movie.Query;
+using MovieBooking.Persistence.Repositories.Seat.Query;
 using MovieBooking.Persistence.Repositories.Theater.Query;
 using System;
 using System.Collections;
@@ -100,9 +102,13 @@ namespace MovieBooking.Persistence.UnitofWork
         public ITheaterQueryRepository TheaterQueryRepository => throw new NotImplementedException();
         public IScreenQueryRepository ScreenQueryRepository => throw new NotImplementedException();
         public IMovieQueryRepository movieQueryRepository => throw new NotImplementedException();
-        public ISeatQueryRepository seatQueryRepository => throw new NotImplementedException();
+        //public ISeatQueryRepository seatQueryRepository => throw new NotImplementedException();
         public IShowTimeQueryRepostory showTimeQueryRepostory => throw new NotImplementedException();
         public IBookingQueryRepository bookingQueryRepository => throw new NotImplementedException();
+
+        public ISeatQueryRepository seatQueryRepositorys => new SeatQueryRepository(_appDbContext);
+
+        public ISeatQueryRepository seatQueryRepository => throw new NotImplementedException();
 
         public void Dispose()
         {

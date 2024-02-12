@@ -13,5 +13,6 @@ namespace MovieBooking.Application.Contracts.Persistence.Repositoris.Base
         Task<IQueryable<T>> GetAllAsync(bool isChangeTracking = false);
         Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool isChangeTracking = false);
         Task<T> GetByIdAsync(string id, bool isChangeTracking = false);
+        //Task<IEnumerable<T>> GetAll(bool isChangeTracking = false);
     }
 }

@@ -19,6 +19,7 @@ namespace MovieBooking.Application.Features.Common
         public static string DataFound => "Data found";
         public static string NoDataFound => "No Data found";
         public static string NotFound => "{0} Not Found";
+        public static string FailedToDelete => "Failed to Delete Data";
     }
     public static class HttpStatusCodes
     {
