@@ -24,14 +24,14 @@ public class UserController : BaseApiController
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
-    [Authorize(Roles = "AdminiStrator")]
+    [Authorize(Roles = "Administrator,User")]
     [HttpGet("{id}")]
     public async Task<ApiResponse<UserDetailsDto>> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         return await _userService.GetUserDetailsAsync(id, cancellationToken);
     }
 
-    [Authorize(Roles = "AdminiStrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpPost("search")]
     //[MustHavePermission(Action.Search, Resource.Users)]
     public async Task<IPagedDataResponse<UserListDto>> GetListAsync(UserListFilter filter, CancellationToken cancellationToken)
@@ -39,7 +39,26 @@ public class UserController : BaseApiController
         return await _userService.SearchAsync(filter, cancellationToken);
     }
 
-    [Authorize(Roles = "AdminiStrator")]
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync(CreateUserRequest request)
+    {
+        try
+        {
+            var response = await _userService.CreateUserAsync(request);
+            return StatusCode((int)response.StatusCode, response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating user");
+            return StatusCode((int)HttpStatusCodes.InternalServerError, new ApiResponse<string>
+            {
+                Success = false,
+                Message = "An error occurred while creating the user."
+            });
+        }
+    }
+
+    [Authorize(Roles = "Administrator")]
     [HttpPut("{id}")]
     //[MustHavePermission(Action.Update, Resource.Users)]
     public async Task<ApiResponse<string>> UpdateAsync(string id, UpdateUserDto request)
@@ -56,7 +75,7 @@ public class UserController : BaseApiController
         return await _userService.UpdateAsync(new UpdateUserRequest() { user = request, Origin = GetOriginFromRequest(_configuration) });
     }
 
-    [Authorize(Roles = "AdminiStrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpDelete("{id}")]
     //[MustHavePermission(Action.Delete, Resource.Users)]
     public async Task<ApiResponse<string>> DeleteAsync(string id)

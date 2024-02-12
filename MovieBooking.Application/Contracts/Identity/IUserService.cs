@@ -18,5 +18,6 @@ namespace MovieBooking.Application.Contracts.Identity
         Task<ApiResponse<string>> UpdateAsync(UpdateUserRequest request);
         Task<ApiResponse<string>> DeleteAsync(string userId);
         Task<IPagedDataResponse<UserListDto>> SearchAsync(UserListFilter filter, CancellationToken cancellationToken);
+        Task<ApiResponse<string>> CreateUserAsync(CreateUserRequest request);
     }
 }

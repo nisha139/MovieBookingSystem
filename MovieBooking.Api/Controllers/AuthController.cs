@@ -24,12 +24,12 @@ namespace MovieBooking.Api.Controllers
         private readonly IAuthService _authService = authService;
         private readonly IConfiguration _configuration = configuration;
 
-        [HttpGet("{id}")]
+        //[HttpGet("{id}")]
        
-        public async Task<ApiResponse<UserDetailsDto>> GetByIdAsync(string id, CancellationToken cancellationToken)
-        {
-            return await _authService.GetUserDetailsAsync(id, cancellationToken);
-        }
+        //public async Task<ApiResponse<UserDetailsDto>> GetByIdAsync(string id, CancellationToken cancellationToken)
+        //{
+        //    return await _authService.GetUserDetailsAsync(id, cancellationToken);
+        //}
 
 
         [HttpPost("signin")]
@@ -37,21 +37,21 @@ namespace MovieBooking.Api.Controllers
         {
             return await _authService.AuthenticateAsync(request);
         }
-        [HttpPut("{id}")]
-        //[MustHavePermission(Action.Update, Resource.Users)]
-        public async Task<ApiResponse<string>> UpdateAsync(string id, UpdateUserDto request)
-        {
-            if (id != request.Id)
-            {
-                return new ApiResponse<string>
-                {
-                    Success = false,
-                    Data = "The provided ID in the route does not match the ID in the request body.",
-                    StatusCode = HttpStatusCodes.BadRequest
-                };
-            }
-            return await _authService.UpdateAsync(new UpdateUserRequest() { user = request, Origin = GetOriginFromRequest(_configuration) });
-        }
+        //[HttpPut("{id}")]
+        ////[MustHavePermission(Action.Update, Resource.Users)]
+        //public async Task<ApiResponse<string>> UpdateAsync(string id, UpdateUserDto request)
+        //{
+        //    if (id != request.Id)
+        //    {
+        //        return new ApiResponse<string>
+        //        {
+        //            Success = false,
+        //            Data = "The provided ID in the route does not match the ID in the request body.",
+        //            StatusCode = HttpStatusCodes.BadRequest
+        //        };
+        //    }
+        //    return await _authService.UpdateAsync(new UpdateUserRequest() { user = request, Origin = GetOriginFromRequest(_configuration) });
+        //}
 
         [HttpPost("refreshToken")]
         public async Task<ActionResult<RefreshTokenResponse>> RefreshTokenAsync(RefreshTokenRequest request)
@@ -101,13 +101,13 @@ namespace MovieBooking.Api.Controllers
             };
         }
 
-        [Authorize(Roles ="AdminiStrator")]
-        [HttpDelete("{id}")]
-        //[MustHavePermission(Action.Delete, Resource.Users)]
-        public async Task<ApiResponse<string>> DeleteAsync(string id)
-        {
-            return await _authService.DeleteAsync(id);
-        }
+        //[Authorize(Roles ="AdminiStrator")]
+        //[HttpDelete("{id}")]
+        ////[MustHavePermission(Action.Delete, Resource.Users)]
+        //public async Task<ApiResponse<string>> DeleteAsync(string id)
+        //{
+        //    return await _authService.DeleteAsync(id);
+        //}
 
         //[HttpPost("signup")]
         //public async Task<ActionResult<ApiResponse<UserDetailsDto>>> SignUpAsync(CreateUserCommandRequest request)

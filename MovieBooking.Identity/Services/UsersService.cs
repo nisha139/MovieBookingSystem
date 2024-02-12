@@ -175,6 +175,58 @@ namespace MovieBooking.Identity.Services
 
             return new PagedApiResponse<UserListDto>(count, filter.PageNumber, filter.PageSize) { Data = users };
         }
+        public async Task<ApiResponse<string>> CreateUserAsync(CreateUserRequest request)
+        {
+            // Check if the email is already in use
+            var existingUser = await _userManager.FindByEmailAsync(request.Email);
+            if (existingUser != null)
+            {
+                throw new Exception($"Email {request.Email} is already registered.");
+            }
+
+            // Create a new user object
+            var newUser = new User
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                UserName = request.Email,
+                Email = request.Email,
+                IsActive = true, // Optionally set any default values
+                CreatedOn = DateTime.UtcNow // Optionally set the creation date
+            };
+
+            // Register the user with ASP.NET Identity
+            var result = await _userManager.CreateAsync(newUser, request.Password);
+
+            // Check if user creation was successful
+            if (!result.Succeeded)
+            {
+                throw new Exception($"Failed to create user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
+
+            // Optionally, assign roles to the new user if needed
+            var role = await _roleManager.FindByIdAsync(request.RoleId);
+            if (role == null)
+            {
+                throw new Exception($"Role with ID {request.RoleId} not found.");
+            }
+
+            var roleResult = await _userManager.AddToRoleAsync(newUser, role.Name);
+            if (!roleResult.Succeeded)
+            {
+                throw new Exception($"Failed to assign role to user: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
+            }
+
+            // Return a response indicating success
+            return new ApiResponse<string>
+            {
+                Success = true,
+                Data = newUser.Id, // Optionally, return the ID of the newly created user
+                StatusCode = HttpStatusCodes.Created,
+                Message = $"User {ConstantMessages.AddedSuccesfully}"
+            };
+        }
+
         #endregion
 
     }
