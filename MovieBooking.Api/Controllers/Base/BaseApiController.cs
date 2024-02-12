@@ -17,7 +17,6 @@ namespace MovieBooking.Api.Controllers.Base
             string requestSource = Convert.ToString(HttpContext.Request.Headers["request-source"]);
 
             var corsSettings = _configuration.GetSection(nameof(CorsSettings)).Get<CorsSettings>();
-
            
             return $"{Request.Scheme}://{Request.Host.Value}{Request.PathBase.Value}";
         }

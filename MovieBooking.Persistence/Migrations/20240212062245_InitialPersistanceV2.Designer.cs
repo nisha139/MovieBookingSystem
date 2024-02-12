@@ -12,8 +12,8 @@ using MovieBooking.Persistence.Database;
 namespace MovieBooking.Persistence.Migrations
 {
     [DbContext(typeof(MovieDBContext))]
-    [Migration("20240206095342_InitialChanges")]
-    partial class InitialChanges
+    [Migration("20240212062245_InitialPersistanceV2")]
+    partial class InitialPersistanceV2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,6 @@ namespace MovieBooking.Persistence.Migrations
             modelBuilder.Entity("MovieBooking.Domain.Entities.Booking", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
@@ -70,13 +69,11 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId");
-
                     b.HasIndex("SeatId");
 
                     b.HasIndex("ShowtimeID");
 
-                    b.ToTable("Booking");
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Movie", b =>
@@ -216,6 +213,7 @@ namespace MovieBooking.Persistence.Migrations
             modelBuilder.Entity("MovieBooking.Domain.Entities.Seat", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Column")
@@ -245,11 +243,16 @@ namespace MovieBooking.Persistence.Migrations
                     b.Property<int>("Row")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("ScreenId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ScreenId");
 
                     b.ToTable("seats");
                 });
@@ -257,6 +260,7 @@ namespace MovieBooking.Persistence.Migrations
             modelBuilder.Entity("MovieBooking.Domain.Entities.Showtime", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
@@ -283,10 +287,15 @@ namespace MovieBooking.Persistence.Migrations
                     b.Property<DateTimeOffset>("ModifiedOn")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ScreenID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
 
                     b.HasIndex("ScreenID");
 
@@ -379,7 +388,7 @@ namespace MovieBooking.Persistence.Migrations
                 {
                     b.HasOne("MovieBooking.Domain.Entities.Movie", "Movie")
                         .WithMany()
-                        .HasForeignKey("MovieId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -420,7 +429,7 @@ namespace MovieBooking.Persistence.Migrations
                 {
                     b.HasOne("MovieBooking.Domain.Entities.Screen", "screen")
                         .WithMany("Seats")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ScreenId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -431,7 +440,7 @@ namespace MovieBooking.Persistence.Migrations
                 {
                     b.HasOne("MovieBooking.Domain.Entities.Movie", "Movie")
                         .WithMany("Showtimes")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

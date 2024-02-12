@@ -12,8 +12,8 @@ using MovieBooking.Identity.Database;
 namespace MovieBooking.Identity.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    [Migration("20240210141213_TestChanges")]
-    partial class TestChanges
+    [Migration("20240212061817_InitialV2")]
+    partial class InitialV2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
