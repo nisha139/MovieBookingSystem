@@ -30,3 +30,6 @@ namespace MovieBooking.Domain.Common
         }
     }
 }
+// These classes demonstrate how to encapsulate common functionality in a base class,
+// which is a key principle of DDD(Domain-Driven Design).
+//The [NotMapped] attribute is used to instruct EF that the DomainEvents property should not be mapped to any database column.

@@ -24,3 +24,5 @@ namespace MovieBooking.Domain.Common
         public bool IsDeleted { get; set; } = false;
     }
 }
+//timestamp when the entity was created.
+//the Single Responsibility Principle (SRP) by encapsulating common functionality in a base class.

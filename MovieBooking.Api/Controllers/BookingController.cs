@@ -17,13 +17,16 @@ namespace MovieBooking.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class BookingController : BaseApiController
+
     {
+        [Authorize(Roles = "Administrator,User")]
         [HttpGet("{id}")]
         public async Task<ApiResponse<BookingDetailDto>> GetBookingDetails(Guid id)
         {
             return await Mediator.Send(new GetBookingDetailsQueryRequest(id));
         }
-        [Authorize(Roles = "Administrator")]
+
+        [Authorize(Roles = "Administrator,User")]
         [HttpPost("Create")]
         //[MustHavePermission(Action.Create, Resource.Movie)]
         public async Task<ApiResponse<int>> CreateBooking(CreateBookingCommandRequest request)
@@ -47,6 +50,7 @@ namespace MovieBooking.Api.Controllers
             return await Mediator.Send(request);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost("Search")]
         public async Task<IPagedDataResponse<BookingListDto>> GetBookingListAsync(PaginationFilter request)
         {

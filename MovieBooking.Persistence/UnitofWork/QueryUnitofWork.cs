@@ -10,8 +10,11 @@ using MovieBooking.Application.UnitOfWork;
 using MovieBooking.Domain.Common;
 using MovieBooking.Persistence.Database;
 using MovieBooking.Persistence.Repositories.Base;
+using MovieBooking.Persistence.Repositories.Booking.Query;
 using MovieBooking.Persistence.Repositories.Movie.Query;
+using MovieBooking.Persistence.Repositories.Screen.Query;
 using MovieBooking.Persistence.Repositories.Seat.Query;
+using MovieBooking.Persistence.Repositories.ShowTIme.Query;
 using MovieBooking.Persistence.Repositories.Theater.Query;
 using System;
 using System.Collections;
@@ -26,11 +29,12 @@ namespace MovieBooking.Persistence.UnitofWork
     {
         private readonly MovieDBContext _appDbContext;
         private Hashtable _repositories;
-
-        public QueryUnitofWork(MovieDBContext appDbContext)
+        private readonly ISeatQueryRepository _seatQueryRepository;
+        public QueryUnitofWork(MovieDBContext appDbContext, ISeatQueryRepository seatQueryRepository)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _appDbContext = appDbContext;
+            _seatQueryRepository = seatQueryRepository;
         }
         public async Task<int> SaveAsync(CancellationToken cancellationToken)
         {
@@ -76,6 +80,7 @@ namespace MovieBooking.Persistence.UnitofWork
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
         }
+        public ISeatQueryRepository seatQueryRepository => _seatQueryRepository;
         public ITheaterQueryRepository theaterQueryRepository
         {
             get
@@ -97,18 +102,23 @@ namespace MovieBooking.Persistence.UnitofWork
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
         }
+        public BookingQueryRepository _bookingQueryRepository;
+        public ShowTimeRepository _ShowtimeQueryRepository;
+        public ScreenQueryRepository _ScreenQueryRepository;
+        public TheaterQueryRepository _theaterQueryRepository;
 
-        public IMovieQueryRepository MovieQueryRepository => throw new NotImplementedException();
-        public ITheaterQueryRepository TheaterQueryRepository => throw new NotImplementedException();
-        public IScreenQueryRepository ScreenQueryRepository => throw new NotImplementedException();
-        public IMovieQueryRepository movieQueryRepository => throw new NotImplementedException();
+        public ITheaterQueryRepository TheaterQueryRepository => _theaterQueryRepository ?? new TheaterQueryRepository(_appDbContext);
+        public IScreenQueryRepository ScreenQueryRepository => _ScreenQueryRepository ?? new ScreenQueryRepository(_appDbContext);
+        //public IMovieQueryRepository movieQueryRepository ;
         //public ISeatQueryRepository seatQueryRepository => throw new NotImplementedException();
-        public IShowTimeQueryRepostory showTimeQueryRepostory => throw new NotImplementedException();
-        public IBookingQueryRepository bookingQueryRepository => throw new NotImplementedException();
+        public IShowTimeQueryRepostory showTimeQueryRepostory => _ShowtimeQueryRepository ?? new ShowTimeRepository(_appDbContext);
+        public IBookingQueryRepository bookingQueryRepository => _bookingQueryRepository ?? new BookingQueryRepository(_appDbContext);
 
         public ISeatQueryRepository seatQueryRepositorys => new SeatQueryRepository(_appDbContext);
+        public IMovieQueryRepository movieQueryRepository => _movieQueryRepository ?? new MovieQueryRepository(_appDbContext);
+        
 
-        public ISeatQueryRepository seatQueryRepository => throw new NotImplementedException();
+        //public ISeatQueryRepository seatQueryRepository => throw new NotImplementedException();
 
         public void Dispose()
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieBooking.Api.Controllers.Base;
 using MovieBooking.Application.Contracts.Responses;
@@ -17,18 +18,21 @@ namespace MovieBooking.Api.Controllers
     [ApiController]
     public class ShowTimeController : BaseApiController
     {
+        [Authorize(Roles = "Administrator")]
         [HttpGet("{id}")]
         public async Task<ApiResponse<ShowTimeDetailDto>> GetShowTimeDetails(Guid id)
         {
             return await Mediator.Send(new GetShowTimeDetailsQueryRequest(id));
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost("Create")]
         public async Task<ApiResponse<int>> CreateShowTime(CreateShowTimeCommandRequest request)
         {
             return await Mediator.Send(request);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public async Task<ApiResponse<string>> UpdateShowTime(Guid id, UpdateShowTimeCommandRequest request)
         {
@@ -44,12 +48,14 @@ namespace MovieBooking.Api.Controllers
             return await Mediator.Send(request);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost("Search")]
         public async Task<IPagedDataResponse<ShowTimeListDto>> GetShowTimeListAsync(PaginationFilter request)
         {
             return await Mediator.Send(new GetShowTimeListQuery() { PaginationFilter = request });
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public async Task<ApiResponse<string>> DeleteShowTime(Guid id)
         {

@@ -51,7 +51,7 @@ namespace MovieBooking.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Starter API");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieBooking API");
                 });
             }
 

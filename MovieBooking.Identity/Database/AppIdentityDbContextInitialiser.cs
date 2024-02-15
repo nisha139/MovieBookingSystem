@@ -101,6 +101,9 @@ public class AppIdentityDbContextInitialiser(ILogger<AppIdentityDbContextInitial
         foreach (string roleName in Constants.IdentityRole.DefaultRoles)
         {
             var r = await _roleManager.Roles.SingleOrDefaultAsync(r => r.Name == roleName);
+            //filters the roles collection to find the role with a name equal to roleName.
+            //The SingleOrDefaultAsync method is a part of LINQ, specifically Entity Framework Core in this case, and
+            //it's used to retrieve a single element from a sequence that satisfies a specified condition. 
 
             if (await _roleManager.Roles.SingleOrDefaultAsync(r => r.Name == roleName)
                 is not Models.ApplicationRole role)

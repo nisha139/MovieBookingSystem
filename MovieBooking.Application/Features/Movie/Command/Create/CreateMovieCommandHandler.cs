@@ -1,21 +1,28 @@
 ﻿using MediatR;
+using Serilog;
+using MovieBooking.Application.Behaviours;
 using MovieBooking.Application.Features.Common;
 using MovieBooking.Application.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-
 
 namespace MovieBooking.Application.Features.Movie.Command.Create
 {
-    public class CreateMovieCommandHandler(ICommandUnitOfWork command) : IRequestHandler<CreateMovieCommandRequest, ApiResponse<int>>
+    public class CreateMovieCommandHandler : IRequestHandler<CreateMovieCommandRequest, ApiResponse<int>>
     {
-        private readonly ICommandUnitOfWork _commandUnitofWork = command;
+        private readonly ICommandUnitOfWork _commandUnitOfWork;
+        private readonly Serilog.ILogger _logger;
+
+        public CreateMovieCommandHandler(ICommandUnitOfWork commandUnitOfWork, ILogger logger)
+        {
+            _commandUnitOfWork = commandUnitOfWork;
+            _logger = logger;
+        }
 
         public async Task<ApiResponse<int>> Handle(CreateMovieCommandRequest request, CancellationToken cancellationToken)
         {
+            _logger.Information("Handling CreateMovieCommand");
+
             var entity = new Domain.Entities.Movie
             {
                 Title = request.Title,
@@ -24,8 +31,10 @@ namespace MovieBooking.Application.Features.Movie.Command.Create
                 Duration = request.Duration,
                 IsActive = request.IsActive,
             };
-            await _commandUnitofWork.CommandRepository<Domain.Entities.Movie>().AddAsync(entity);
-            var saveResult = await _commandUnitofWork.SaveAsync(cancellationToken);
+
+            await _commandUnitOfWork.CommandRepository<Domain.Entities.Movie>().AddAsync(entity);
+            var saveResult = await _commandUnitOfWork.SaveAsync(cancellationToken);
+
             var response = new ApiResponse<int>
             {
                 Success = saveResult > 0,
@@ -33,6 +42,9 @@ namespace MovieBooking.Application.Features.Movie.Command.Create
                 Data = saveResult,
                 Message = saveResult > 0 ? $"Movie {ConstantMessages.AddedSuccesfully}" : $"{ConstantMessages.FailedToCreate} movie."
             };
+
+            _logger.Information($"Handled CreateMovieCommand. Success: {response.Success},{request.Title} Movie Created, StatusCode: {response.StatusCode}");
+
             return response;
         }
     }

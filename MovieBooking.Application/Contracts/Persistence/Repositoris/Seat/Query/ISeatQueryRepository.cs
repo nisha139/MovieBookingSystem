@@ -16,5 +16,9 @@ namespace MovieBooking.Application.Contracts.Persistence.Repositoris.Seat.Query
     {
         Task<MovieBooking.Domain.Entities.Seat> GetByIdAsync(Guid id);
         Task<IPagedDataResponse<SeatListDto>> SearchAsync(ISpecification<SeatListDto> spec, int pageNumber, int pageSize, CancellationToken cancellationToken);
+
+        Task<IPagedDataResponse<SeatListDto>> SearchBookedSeatAsync(ISpecification<SeatListDto> spec, int pageNumber, int pageSize, CancellationToken cancellationToken);
+
+
     }
 }

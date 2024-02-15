@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MovieBooking.Application.Features.Booking.Command.Create
 {
+    //Command and Query Responsibility Segregation 
     public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommandRequest, ApiResponse<int>>
     {
         private readonly ICommandUnitOfWork _commandUnitOfWork;
@@ -86,15 +87,22 @@ namespace MovieBooking.Application.Features.Booking.Command.Create
                         Message = "Failed to create booking."
                     };
                 }
-
                 // Update seat statuses to "Booked"
-                //foreach (var seatId in request.SeatID.Split(','))
-                //{
-                //    var seat = await _queryUnitOfWork.seatQueryRepository.GetByIdAsync(Guid.Parse(seatId));
-                //    seat.Status = "Booked";
-                //    _commandUnitOfWork.CommandRepository<MovieBooking.Domain.Entities.Seat>().Update(seat);
-                //}
+                foreach (var seatId in request.SeatID.Split(','))
+                {
+                    var seat = await _queryUnitOfWork.seatQueryRepository.GetByIdAsync(Guid.Parse(seatId));
+
+                    // Check if the seat is already booked
+                    if (seat.Status == "Booked")
+                    {
+                        throw new InvalidOperationException($"Seat {seatId} is already booked.");
+                    }
+
+                    seat.Status = "Booked";
+                    _commandUnitOfWork.CommandRepository<MovieBooking.Domain.Entities.Seat>().Update(seat);
+                }
                 await _commandUnitOfWork.SaveAsync(cancellationToken);
+
 
                 // Associate the transaction with the booking by setting the BookingId property
                 transaction.BookingId = entity.Id;

@@ -49,7 +49,7 @@ namespace MovieBooking.Api.Controllers
             }
             return await Mediator.Send(request);
         }
-
+        [Authorize(Roles = "Administrator,User")]
         [HttpPost("Search")]
         public async Task<IPagedDataResponse<MovieListDto>> GetMovieListAsync(PaginationFilter request)
         {

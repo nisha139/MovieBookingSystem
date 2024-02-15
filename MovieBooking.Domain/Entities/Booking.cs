@@ -20,5 +20,5 @@
 
            public List<Transaction> Transactions { get; set; }
             public List<Movie> movies { get; set; }
-        }
+    }
     }

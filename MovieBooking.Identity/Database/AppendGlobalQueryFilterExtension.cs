@@ -15,6 +15,7 @@ internal static class ModelBuilderExtensions
         foreach (var entity in entities)
         {
             var parameterType = Expression.Parameter(modelBuilder.Entity(entity).Metadata.ClrType);
+            //retrieves the CLR type (System.Type) of the entity being processed.
             var filterBody = ReplacingExpressionVisitor.Replace(filter.Parameters.Single(), parameterType, filter.Body);
 
             // get the existing query filter
@@ -33,3 +34,5 @@ internal static class ModelBuilderExtensions
         return modelBuilder;
     }
 }
+//ModelBuilder class or method is publicly accessible and is a static member of its containing type. This typically indicates that
+//it's a method or property that can be used without creating an instance of the ModelBuilder class. 
