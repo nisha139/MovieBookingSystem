@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieBooking.InfraStructure.Cors;
+using System.Reflection.Metadata;
+using System.Text;
 
 namespace MovieBooking.Api.Controllers.Base
 {
@@ -9,6 +11,8 @@ namespace MovieBooking.Api.Controllers.Base
     [ApiController]
     public class BaseApiController : ControllerBase
     {
+        //Accept the incoming request
+       //· Handles the incoming request and provide the response.
         private ISender _mediator = null!;
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieBooking.Api.Controllers.Base;
 using MovieBooking.Application.Contracts.Responses;
@@ -17,18 +18,19 @@ namespace MovieBooking.Api.Controllers
     [ApiController]
     public class ScreenController : BaseApiController
     {
+        [Authorize(Roles = "Administrator,User")]
         [HttpGet("{id}")]
         public async Task<ApiResponse<ScreenTheaterDetail>> GetScreenDetails(Guid id)
         {
             return await Mediator.Send(new GetScreenDetailsQueryRequest(id));
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost("Create")]
         public async Task<ApiResponse<int>> CreateScreen(CreateScreenCommandRequest request)
         {
             return await Mediator.Send(request);
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public async Task<ApiResponse<string>> UpdateScreen(Guid id, UpdateScreenRequestCommand request)
         {
@@ -43,13 +45,13 @@ namespace MovieBooking.Api.Controllers
             }
             return await Mediator.Send(request);
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost("Search")]
         public async Task<IPagedDataResponse<ScreenListDto>> GetScreenListAsync(PaginationFilter request)
         {
             return await Mediator.Send(new GetScreenListQuery() { PaginationFilter = request });
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public async Task<ApiResponse<string>> DeleteScreen(Guid id)
         {

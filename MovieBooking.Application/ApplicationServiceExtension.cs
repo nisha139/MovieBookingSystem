@@ -4,25 +4,32 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MovieBooking.Application.Behaviours;
 
-namespace MovieBooking.Application;
-
-public static class ApplicationServiceExtension
+namespace MovieBooking.Application
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static class ApplicationServiceExtension
     {
-
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddMediatR(cfg =>
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
-            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
-            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
-            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        });
+            // Register LoggingBehaviour as a pipeline behavior
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
 
-        return services;
+            // Configure MediatR with behaviors
+            services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+
+                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
+
+                // Add other behaviors as needed (UnhandledExceptionBehaviour, AuthorizationBehaviour, ValidationBehaviour, etc.)
+                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
+                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            });
+
+            return services;
+        }
     }
 }

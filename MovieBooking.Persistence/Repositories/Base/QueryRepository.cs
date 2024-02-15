@@ -32,6 +32,9 @@ namespace MovieBooking.Persistence.Repositories.Base
             if (isChangeTracking)
             {
                 return query = query.AsNoTracking().AsQueryable();
+
+                //This method is called after AsNoTracking() to convert the result into an IQueryable<T>.
+                //This enables further LINQ querying capabilities on the collection.
             }
             return await Task.Run(() => query.AsQueryable());
 
@@ -48,6 +51,8 @@ namespace MovieBooking.Persistence.Repositories.Base
             {
                 query = predicate is null ? query.AsNoTracking()
                                           : query.Where(predicate).AsNoTracking();
+                // It's typically used when you only need to read data from the database and you don't intend
+                // to make any changes to the entities or save them back to the database. By calling AsNoTracking()
                 if (includes != null)
                 {
                     foreach (var item in includes)

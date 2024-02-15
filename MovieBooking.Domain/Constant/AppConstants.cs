@@ -11,3 +11,4 @@ namespace MovieBooking.Domain.Constant
         public const int PageSize = 10;
     }
 }
+    
