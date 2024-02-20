@@ -14,5 +14,6 @@ namespace MovieBooking.Application.Contracts.Persistence.Repositoris.Screen.Quer
     public interface IScreenQueryRepository : IQueryRepository<Domain.Entities.Screen>
     {
         Task<IPagedDataResponse<ScreenListDto>> SearchAsync(ISpecification<ScreenListDto> spec, int pageNumber, int pageSize, CancellationToken cancellationToken);
+        Task LoadScreensForTheaterAsync(Domain.Entities.Theater theater);
     }
 }

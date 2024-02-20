@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieBooking.Api.Controllers.Base;
 using MovieBooking.Application.Contracts.Responses;
 using MovieBooking.Application.Features.Common;
+using MovieBooking.Application.Features.Screen.Dto;
 using MovieBooking.Application.Features.Theater.Command.Create;
 using MovieBooking.Application.Features.Theater.Command.Delete;
 using MovieBooking.Application.Features.Theater.Command.Update;
@@ -69,11 +70,22 @@ namespace MovieBooking.Api.Controllers
             return  await Mediator.Send(new GetTheatersByMovieTitleQueryRequest(title));
         }
 
-        [Authorize(Roles ="Administrator,User")]
-        [HttpGet("GetTheaterScreensByTitle/{title}")]
-        public async Task<ActionResult<ApiResponse<List<ScreenDto>>>> GetTheaterScreensByTitle(string title)
+        [Authorize(Roles = "Administrator,User")]
+        [HttpGet("details/{theaterId}")]
+        public async Task<IActionResult> GetTheaterDetail(Guid theaterId)
         {
-            return await Mediator.Send(new GetTheaterScreensByTitleQuery(title));
+            var query = new GetTheaterWithScreensQueryRequest(theaterId);
+            var theaterResponse = await Mediator.Send(query);
+
+            if (theaterResponse.Success)
+            {
+                return Ok(theaterResponse);
+            }
+            else
+            {
+                return StatusCode((int)theaterResponse.StatusCode, theaterResponse);
+            }
         }
+
     }
 }
