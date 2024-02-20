@@ -1,56 +1,80 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using MovieBooking.Application.Exceptions;
 using MovieBooking.Application.Features.Common;
-using MovieBooking.Application.Features.Movie.Dto;
 using MovieBooking.Application.Features.Theater.Dto;
 using MovieBooking.Application.UnitOfWork;
-using MovieBooking.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Serilog;
 
 namespace MovieBooking.Application.Features.Theater.Query.GetTheaterScreensByTitle
 {
-    public record GetTheaterScreensByTitleQuery(string TheaterTitle) : IRequest<ApiResponse<List<ScreenDto>>>;
+    public record GetTheaterWithScreensQueryRequest(Guid TheaterId) : IRequest<ApiResponse<TheaterDto>>;
 
-    public class GetTheaterScreensByTitleQueryHandler : IRequestHandler<GetTheaterScreensByTitleQuery, ApiResponse<List<ScreenDto>>>
+    public class GetTheaterWithScreensQueryHandler : IRequestHandler<GetTheaterWithScreensQueryRequest, ApiResponse<TheaterDto>>
     {
-        private readonly IQueryUnitOfWork _query;
-        private readonly IMapper _mapper;
+        private readonly IQueryUnitOfWork _queryUnitOfWork;
+        private readonly ILogger _logger;
 
-        public GetTheaterScreensByTitleQueryHandler(IQueryUnitOfWork query, IMapper mapper)
+        public GetTheaterWithScreensQueryHandler(IQueryUnitOfWork queryUnitOfWork, ILogger logger)
         {
-            _query = query;
-            _mapper = mapper;
+            _queryUnitOfWork = queryUnitOfWork;
+            _logger = logger;
         }
 
-        public async Task<ApiResponse<List<ScreenDto>>> Handle(GetTheaterScreensByTitleQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<TheaterDto>> Handle(GetTheaterWithScreensQueryRequest request, CancellationToken cancellationToken)
         {
-            var theaters = await _query.QueryRepository<Domain.Entities.Theater>()
-                .GetAllAsync(); // Retrieve all theaters
-
-            var theater = theaters.FirstOrDefault(t => t.Name.ToLower() == request.TheaterTitle.ToLower());
-            if (theater == null)
-                throw new NotFoundException($"Theater with name '{request.TheaterTitle}' not found.", request.TheaterTitle);
-
-            // Ensure theater.Screens is not null before accessing it
-            var screens = theater.Screens?.SelectMany(s => s.Showtimes)
-                                          .Select(showtime => _mapper.Map<ScreenDto>(showtime.Screen))
-                                          .Distinct()
-                                          .ToList() ?? new List<ScreenDto>();
-
-            var response = new ApiResponse<List<ScreenDto>>
+            try
             {
-                Success = true,
-                StatusCode = HttpStatusCodes.OK,
-                Data = screens,
-                Message = $"Available screens for theater '{request.TheaterTitle}' found."
-            };
+                var theater = await _queryUnitOfWork.theaterQueryRepository.GetByIdAsync(request.TheaterId.ToString());
 
-            return response;
+                if (theater == null)
+                    throw new NotFoundException(nameof(Theater), request.TheaterId);
+
+                // Load screens for the theater
+                await _queryUnitOfWork.ScreenQueryRepository.LoadScreensForTheaterAsync(theater);
+
+                var theaterDto = new TheaterDto
+                {
+                    Id = theater.Id,
+                    Name = theater.Name,
+                    Location = theater.Location,
+                    NoOfScreen = theater.NoOfScreen,
+                    Screens = theater.Screens.Select(screen => new ScreenDto
+                    {
+                        Id = screen.Id,
+                        Capacity = screen.Capacity
+                    }).ToList()
+                };
+
+                return new ApiResponse<TheaterDto>
+                {
+                    Success = true,
+                    StatusCode = HttpStatusCodes.OK,
+                    Data = theaterDto,
+                    Message = "Screen details retrieved successfully."
+                };
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.Warning(ex.Message);
+                return new ApiResponse<TheaterDto>
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCodes.NotFound,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"An error occurred while retrieving theater details for TheaterId: {request.TheaterId}");
+                return new ApiResponse<TheaterDto>
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCodes.InternalServerError,
+                    Message = $"An error occurred while retrieving theater details.",
+                    Data = null
+                };
+            }
         }
     }
 }

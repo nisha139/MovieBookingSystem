@@ -35,5 +35,13 @@ namespace MovieBooking.Persistence.Repositories.Screen.Query
 
             return new PagedApiResponse<ScreenListDto>(count, pageNumber, pageSize) { Data = movies };
         }
+
+        public async Task LoadScreensForTheaterAsync(Domain.Entities.Theater theater)
+        {
+            // Assuming you have a navigation property named 'Theater' in your Screen entity
+            await context.Entry(theater)
+                .Collection(t => t.Screens)
+                .LoadAsync();
+        }
     }
 }
