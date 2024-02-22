@@ -8,6 +8,7 @@ using MovieBooking.Application.Models.Users;
 using MovieBooking.Identity.Authorizations.Permissions;
 using MovieBooking.Identity.Authorizations;
 using MovieBooking.Identity.Services;
+using Action = MovieBooking.Identity.Authorizations.Action;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -24,16 +25,16 @@ public class UserController : BaseApiController
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
-    [Authorize(Roles = "Administrator,User")]
+    //[Authorize(Roles = "Administrator,User")]
     [HttpGet("{id}")]
     public async Task<ApiResponse<UserDetailsDto>> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         return await _userService.GetUserDetailsAsync(id, cancellationToken);
     }
 
-    [Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Administrator")]
     [HttpPost("search")]
-    //[MustHavePermission(Action.Search, Resource.Users)]
+    [MustHavePermission(Action.Search, Resource.Users)]
     public async Task<IPagedDataResponse<UserListDto>> GetListAsync(UserListFilter filter, CancellationToken cancellationToken)
     {
         return await _userService.SearchAsync(filter, cancellationToken);
@@ -58,9 +59,9 @@ public class UserController : BaseApiController
         }
     }
 
-    [Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Administrator")]
     [HttpPut("{id}")]
-    //[MustHavePermission(Action.Update, Resource.Users)]
+    [MustHavePermission(Action.Update, Resource.Users)]
     public async Task<ApiResponse<string>> UpdateAsync(string id, UpdateUserDto request)
     {
         if (id != request.Id)
@@ -75,9 +76,9 @@ public class UserController : BaseApiController
         return await _userService.UpdateAsync(new UpdateUserRequest() { user = request, Origin = GetOriginFromRequest(_configuration) });
     }
 
-    [Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Administrator")]
     [HttpDelete("{id}")]
-    //[MustHavePermission(Action.Delete, Resource.Users)]
+    [MustHavePermission(Action.Delete, Resource.Users)]
     public async Task<ApiResponse<string>> DeleteAsync(string id)
     {
         return await _userService.DeleteAsync(id);

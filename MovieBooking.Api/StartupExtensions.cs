@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieBooking.Application.Contracts.Identity;
 using MovieBooking.Identity.Services;
 using MovieBooking.Application.Contracts.Caching;
+using MovieBooking.API.Middlewares;
 namespace MovieBooking.Api
 {
     public  static class StartupExtensions
@@ -34,6 +35,7 @@ namespace MovieBooking.Api
             //        policy.RequireClaim("uid"); // Assuming you store user ID in claims
             //    });
             //});
+
 
             builder.Services.AddSwaggerGen();
 
@@ -64,7 +66,7 @@ namespace MovieBooking.Api
 
             app.UseAuthentication();
 
-            //app.UseCustomExceptionHandler();
+            app.UseCustomExceptionHandler();
 
             app.UseAuthorization();
 
@@ -75,6 +77,7 @@ namespace MovieBooking.Api
             return app;
 
         }
+
 
         private static void AddSwagger(IServiceCollection services)
         {

@@ -1,10 +1,8 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieBooking.Api.Controllers.Base;
 using MovieBooking.Application.Contracts.Responses;
 using MovieBooking.Application.Features.Common;
-using MovieBooking.Application.Features.Screen.Dto;
 using MovieBooking.Application.Features.Theater.Command.Create;
 using MovieBooking.Application.Features.Theater.Command.Delete;
 using MovieBooking.Application.Features.Theater.Command.Update;
@@ -14,6 +12,9 @@ using MovieBooking.Application.Features.Theater.Query.GetTheaterList;
 using MovieBooking.Application.Features.Theater.Query.GetTheatersByMovieTitleQuery;
 using MovieBooking.Application.Features.Theater.Query.GetTheaterScreensByTitle;
 using MovieBooking.Application.Models.Specification.Filters;
+using MovieBooking.Identity.Authorizations.Permissions;
+using MovieBooking.Identity.Authorizations;
+using Action = MovieBooking.Identity.Authorizations.Action;
 
 namespace MovieBooking.Api.Controllers
 {
@@ -21,28 +22,32 @@ namespace MovieBooking.Api.Controllers
     [ApiController]
     public class TheaterController : BaseApiController
     {
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpGet("{id}")]
         public async Task<ApiResponse<TheaterDetailDto>> GetTheaterDetails(Guid id)
         {
             return await Mediator.Send(new GetTheaterDetailsQueryRequest(id));
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPost("Create")]
+        [MustHavePermission(Action.Create, Resource.Theater)]
         public async Task<ApiResponse<int>> CreateTheater(CreateTheaterCommandRequest request)
         {
             return await Mediator.Send(request);
         }
-        [Authorize(Roles = "Administrator")]
+
+        //[Authorize(Roles = "Administrator")]
         [HttpPost("Search")]
+        [MustHavePermission(Action.Search, Resource.Theater)]
         public async Task<IPagedDataResponse<TheaterListDto>> GetTheaterListAsync(PaginationFilter request)
         {
             return await Mediator.Send(new GetTheaterListQuery() { PaginationFilter = request });
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
+        [MustHavePermission(Action.Update, Resource.Theater)]
         public async Task<ApiResponse<string>> UpdateTheater(Guid id, UpdateTheaterRequestCommand request)
         {
             if (id != request.Id)
@@ -57,8 +62,9 @@ namespace MovieBooking.Api.Controllers
             return await Mediator.Send(request);
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
+        [MustHavePermission(Action.Delete, Resource.Theater)]
         public async Task<ApiResponse<string>> DeleteTheater(Guid id)
         {
             return await Mediator.Send(new DeleteTheaterCommandRequest(id));

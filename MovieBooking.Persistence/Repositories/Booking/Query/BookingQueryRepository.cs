@@ -45,6 +45,31 @@ namespace MovieBooking.Persistence.Repositories.Booking.Query
         }
 
 
+        public async Task<BookingDetailDto> GetEarliestBookingAsync(string showtimeId, List<Guid> seatIds, CancellationToken cancellationToken)
+        {
+            // Convert showtimeId to Guid
+            Guid showtimeGuid = Guid.Parse(showtimeId);
+
+            // Query the database to find the earliest booking for the provided showtime and seat IDs
+            var earliestBooking = context.Bookings
+                .Where(b => b.ShowtimeID == showtimeGuid && seatIds.Contains(Guid.Parse(b.SeatsBooked)))
+                .OrderBy(b => b.CreatedBy)
+                .FirstOrDefault();
+
+            // Mapping the Booking entity to a DTO, adjust this according to your DTO structure
+            if (earliestBooking != null)
+            {
+                return new BookingDetailDto
+                {
+                    Id = earliestBooking.Id,
+                    // Map other properties as needed
+                };
+            }
+
+            return null; // Return null if no booking is found
+        }
+
+
     }
 }
 

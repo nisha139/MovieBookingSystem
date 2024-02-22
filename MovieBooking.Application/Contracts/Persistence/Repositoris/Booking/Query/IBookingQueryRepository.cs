@@ -13,5 +13,6 @@ namespace MovieBooking.Application.Contracts.Persistence.Repositoris.Booking.Que
     public interface IBookingQueryRepository
     {
         Task<IPagedDataResponse<BookingListDto>> SearchAsync(ISpecification<BookingListDto> spec, int pageNumber, int pageSize, CancellationToken cancellationToken);
+        Task<BookingDetailDto> GetEarliestBookingAsync(string showtimeId, List<Guid> seatIds, CancellationToken cancellationToken);
     }
 }

@@ -20,6 +20,7 @@ namespace MovieBooking.Persistence.Repositories.ShowTIme.Query
 {
     public class ShowTimeRepository : QueryRepository<Domain.Entities.Showtime>, IShowTimeQueryRepostory
     {
+
         public ShowTimeRepository(MovieDBContext context) : base(context)
         {
         }
@@ -43,5 +44,39 @@ namespace MovieBooking.Persistence.Repositories.ShowTIme.Query
 
             return new PagedApiResponse<ShowTimeListDto>(count, pageNumber, pageSize) { Data = showtimes };
         }
+
+        public List<ShowTimeDetailDto> GetAvailableShowTimes(Guid movieId, Guid theaterId)
+        {
+            var availableShowTimes = context.showtimes
+                .Where(s => s.MovieId == movieId && s.Screen.theater.Id == theaterId)
+                .Select(s => new ShowTimeDetailDto
+                {
+                    ShowTimeId = s.Id,
+                    ScreenID = s.ScreenID,
+                    MovieId = s.MovieId,
+                    DateTime = s.DateTime
+                })
+                .ToList();
+
+            return availableShowTimes;
+        }
+
+
+        public List<ShowTimeDetailDto> GetAvailableShowTimesForScreen(Guid movieId, Guid theaterId, Guid screenId) 
+        {
+            var availableShowTimes = context.showtimes
+                .Where(s => s.MovieId == movieId && s.Screen.theater.Id == theaterId && s.ScreenID == screenId) 
+                .Select(s => new ShowTimeDetailDto
+                {
+                    ShowTimeId = s.Id,
+                    ScreenID = s.ScreenID,
+                    MovieId = s.MovieId,
+                    DateTime = s.DateTime
+                })
+                .ToList();
+
+            return availableShowTimes;
+        }
+
     }
 }
