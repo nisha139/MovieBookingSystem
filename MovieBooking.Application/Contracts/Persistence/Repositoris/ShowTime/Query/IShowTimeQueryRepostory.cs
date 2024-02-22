@@ -15,5 +15,9 @@ namespace MovieBooking.Application.Contracts.Persistence.Repositoris.ShowTime.Qu
     {
         Task<IPagedDataResponse<ShowTimeListDto>> SearchAsync(ISpecification<ShowTimeListDto> spec, int pageNumber, int pageSize, CancellationToken cancellationToken);
 
+        List<ShowTimeDetailDto> GetAvailableShowTimes(Guid movieId, Guid theaterId);
+
+        List<ShowTimeDetailDto> GetAvailableShowTimesForScreen(Guid movieId, Guid theaterId, Guid screenId);
+
     }
 }

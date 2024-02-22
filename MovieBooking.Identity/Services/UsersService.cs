@@ -23,9 +23,9 @@ namespace MovieBooking.Identity.Services
                                   RoleManager<ApplicationRole> roleManager,
                                   AppIdentityDbContext db,
                                   ICurrentUserService currentUserService,
-                                  IConfiguration configuration
-                                  // ICacheService cache
-                                  //ICacheKeyService cacheKey
+                                  IConfiguration configuration,
+                                   ICacheService cache,
+                                  ICacheKeyService cacheKey
                                   ) : IUserService
     {
         private readonly AppIdentityDbContext _db = db;
@@ -35,8 +35,8 @@ namespace MovieBooking.Identity.Services
         private readonly IConfiguration _configuration = configuration;
 
 
-        //private readonly ICacheService _cache = cache;
-        //private readonly ICacheKeyService _cacheKey = cacheKey;
+        private readonly ICacheService _cache = cache;
+        private readonly ICacheKeyService _cacheKey = cacheKey;
 
         #region public methods
         public async Task<ApiResponse<UserDetailsDto>> GetUserDetailsAsync(string userId, CancellationToken cancellationToken)

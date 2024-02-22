@@ -26,16 +26,17 @@ namespace MovieBooking.Api.Controllers
         {
             return await Mediator.Send(new GetMovieDetailsQueryRequest(id));
         }
-        [Authorize(Roles ="Administrator")]
+       // [Authorize(Roles ="Administrator")]
         [HttpPost("Create")]
-        //[MustHavePermission(Action.Create, Resource.Movie)]
+        [MustHavePermission(Action.Create, Resource.Movie)]     
         public async Task<ApiResponse<int>> CreateMovie(CreateMovieCommandRequest request)
         {
             return await Mediator.Send(request);
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
+        [MustHavePermission(Action.Update, Resource.Movie)]
         public async Task<ApiResponse<string>> UpdateMovie(Guid id, UpdateMovieRequestCommand request)
         {
             if (id != request.Id)
@@ -49,15 +50,18 @@ namespace MovieBooking.Api.Controllers
             }
             return await Mediator.Send(request);
         }
-        [Authorize(Roles = "Administrator,User")]
+
+        //[Authorize(Roles = "Administrator,User")]
         [HttpPost("Search")]
+        [MustHavePermission(Action.Search, Resource.Movie)]
         public async Task<IPagedDataResponse<MovieListDto>> GetMovieListAsync(PaginationFilter request)
         {
             return await Mediator.Send(new GetMovieListQuery() { PaginationFilter = request });
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
+        [MustHavePermission(Action.Delete, Resource.Movie)]
         public async Task<ApiResponse<string>> DeleteMovie(Guid id)
         {
             return await Mediator.Send(new DeleteMovieCommandRequest(id));

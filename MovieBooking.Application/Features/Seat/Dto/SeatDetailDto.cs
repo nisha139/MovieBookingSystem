@@ -12,7 +12,7 @@ namespace MovieBooking.Application.Features.Seat.Dto
         public Guid ScreenId { get; set; }
         public int Row { get; set; }
         public int Column { get; set; }
-        public string Status { get; set; } // Reserved, Available, etc.
+        public string Status { get; set; } 
        
     }
 }

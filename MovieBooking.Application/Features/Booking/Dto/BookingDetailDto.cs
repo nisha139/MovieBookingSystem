@@ -17,6 +17,8 @@ namespace MovieBooking.Application.Features.Booking.Dto
         public ShowtimeDto Showtime { get; set; }
         public SeatDetailDto Seat { get; set; } // Include SeatDetailDto for seat information
         public ScreenDto Screen { get; set; } 
+
+        
     }
 
     public class PaymentMethodDto

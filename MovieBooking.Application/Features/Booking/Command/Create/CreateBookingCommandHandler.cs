@@ -1,17 +1,20 @@
-﻿using MediatR;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using MovieBooking.Application.Contracts.Application;
 using MovieBooking.Application.Features.Common;
 using MovieBooking.Application.UnitOfWork;
 using MovieBooking.Domain.Entities;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MovieBooking.Application.Features.Booking.Command.Create
 {
-    //Command and Query Responsibility Segregation 
     public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommandRequest, ApiResponse<int>>
     {
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _seatLocks = new ConcurrentDictionary<string, SemaphoreSlim>();
         private readonly ICommandUnitOfWork _commandUnitOfWork;
         private readonly IQueryUnitOfWork _queryUnitOfWork;
         private readonly ICurrentUserService _currentUserService;
@@ -25,8 +28,49 @@ namespace MovieBooking.Application.Features.Booking.Command.Create
 
         public async Task<ApiResponse<int>> Handle(CreateBookingCommandRequest request, CancellationToken cancellationToken)
         {
+            List<string> seatIdList = null;
+
             try
             {
+                seatIdList = request.SeatID.Split(',').ToList();
+                // Lock seats to prevent concurrent bookings with a timeout
+                if (!await LockSeats(seatIdList, TimeSpan.FromSeconds(30)))
+                {
+                    return new ApiResponse<int>
+                    {
+                        Success = false,
+                        StatusCode = HttpStatusCodes.BadRequest,
+                        Data = 0,
+                        Message = "Failed to acquire locks for seats. Please try again later."
+                    };
+                }
+
+                // Begin transaction
+                await _commandUnitOfWork.BeginTransaction();
+
+                // Get the seat entities for the requested seats
+                var seatsToBook = new List<Domain.Entities.Seat>();
+                foreach (var seatId in seatIdList)
+                {
+                    var seat = await _queryUnitOfWork.seatQueryRepository.GetByIdAsync(Guid.Parse(seatId));
+                    seatsToBook.Add(seat);
+                }
+
+                // Check if any of the seats are already booked
+                if (seatsToBook.Any(seat => seat.Status == "Booked"))
+                {
+                    // Rollback transaction
+                    await _commandUnitOfWork.RollbackTransactionAsync();
+
+                    return new ApiResponse<int>
+                    {
+                        Success = false,
+                        StatusCode = HttpStatusCodes.Conflict, // HTTP status code 409 Conflict
+                        Data = 0,
+                        Message = "One or more seats are already booked."
+                    };
+                }
+
                 // Create a new PaymentMethod entity
                 var paymentMethod = new PaymentMethod
                 {
@@ -73,36 +117,12 @@ namespace MovieBooking.Application.Features.Booking.Command.Create
                 // Add the booking entity to the repository
                 await _commandUnitOfWork.CommandRepository<MovieBooking.Domain.Entities.Booking>().AddAsync(entity);
 
-                // Save changes to get the booking ID
-                var saveResult = await _commandUnitOfWork.SaveAsync(cancellationToken);
-
-                // Check if the booking was successfully saved
-                if (saveResult <= 0)
-                {
-                    return new ApiResponse<int>
-                    {
-                        Success = false,
-                        StatusCode = HttpStatusCodes.BadRequest,
-                        Data = 0,
-                        Message = "Failed to create booking."
-                    };
-                }
                 // Update seat statuses to "Booked"
-                foreach (var seatId in request.SeatID.Split(','))
+                foreach (var seat in seatsToBook)
                 {
-                    var seat = await _queryUnitOfWork.seatQueryRepository.GetByIdAsync(Guid.Parse(seatId));
-
-                    // Check if the seat is already booked
-                    if (seat.Status == "Booked")
-                    {
-                        throw new InvalidOperationException($"Seat {seatId} is already booked.");
-                    }
-
                     seat.Status = "Booked";
                     _commandUnitOfWork.CommandRepository<MovieBooking.Domain.Entities.Seat>().Update(seat);
                 }
-                await _commandUnitOfWork.SaveAsync(cancellationToken);
-
 
                 // Associate the transaction with the booking by setting the BookingId property
                 transaction.BookingId = entity.Id;
@@ -110,41 +130,25 @@ namespace MovieBooking.Application.Features.Booking.Command.Create
                 // Add the transaction entity to the repository
                 await _commandUnitOfWork.CommandRepository<MovieBooking.Domain.Entities.Transaction>().AddAsync(transaction);
 
-                // Save changes
-                var transactionSaveResult = await _commandUnitOfWork.SaveAsync(cancellationToken);
+                // Commit transaction
+                await _commandUnitOfWork.CommitTransactionAsync();
 
-                // Check if the transaction was successfully saved
-                if (transactionSaveResult <= 0)
+                // Save changes to get the booking ID
+                await _commandUnitOfWork.SaveAsync(cancellationToken);
+
+                return new ApiResponse<int>
                 {
-                    return new ApiResponse<int>
-                    {
-                        Success = false,
-                        StatusCode = HttpStatusCodes.BadRequest,
-                        Data = 0,
-                        Message = "Failed to create transaction."
-                    };
-                }
-
-                // Set the PaymentMethodID to the current PaymentMethod's Id
-                transaction.PaymentMethodID = paymentMethod.Id;
-
-                // Update the Transaction entity in the repository
-                _commandUnitOfWork.CommandRepository<MovieBooking.Domain.Entities.Transaction>().Update(transaction);
-
-                // Save changes
-                var paymentMethodSaveResult = await _commandUnitOfWork.SaveAsync(cancellationToken);
-
-                var response = new ApiResponse<int>
-                {
-                    Success = paymentMethodSaveResult > 0,
-                    StatusCode = paymentMethodSaveResult > 0 ? HttpStatusCodes.Created : HttpStatusCodes.BadRequest,
-                    Data = paymentMethodSaveResult,
-                    Message = paymentMethodSaveResult > 0 ? "Booking added successfully" : "Failed to create booking."
+                    Success = true,
+                    StatusCode = HttpStatusCodes.Created,
+                    Data = entity.Id.GetHashCode(),
+                    Message = "Booking added successfully"
                 };
-                return response;
             }
             catch (Exception ex)
             {
+                // Rollback transaction in case of exception
+                await _commandUnitOfWork.RollbackTransactionAsync();
+
                 // Handle exception appropriately
                 return new ApiResponse<int>
                 {
@@ -154,7 +158,39 @@ namespace MovieBooking.Application.Features.Booking.Command.Create
                     Message = $"An error occurred: {ex.Message}"
                 };
             }
+            finally
+            {
+                // Release locks
+                if (seatIdList != null)
+                {
+                    await ReleaseSeats(seatIdList);
+                }
+            }
         }
 
+        private async Task<bool> LockSeats(IEnumerable<string> seatIds, TimeSpan timeout)
+        {
+            var tasks = seatIds.Select(seatId => LockSeatWithTimeout(seatId, timeout));
+            var completedTask = await Task.WhenAny(tasks);
+            return completedTask.Result;
+        }
+
+        private async Task<bool> LockSeatWithTimeout(string seatId, TimeSpan timeout)
+        {
+            var semaphore = _seatLocks.GetOrAdd(seatId, _ => new SemaphoreSlim(1));
+            return await semaphore.WaitAsync(timeout);
+        }
+
+        private async Task ReleaseSeats(IEnumerable<string> seatIds)
+        {
+            foreach (var seatId in seatIds)
+            {
+                // Release the lock for each seat
+                if (_seatLocks.ContainsKey(seatId))
+                {
+                    _seatLocks[seatId].Release();
+                }
+            }
+        }
     }
 }

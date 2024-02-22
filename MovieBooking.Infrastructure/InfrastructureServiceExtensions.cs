@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MovieBooking.Application.Contracts.Application;
 using MovieBooking.Application.Interfaces;
+using MovieBooking.Infrastructure.DistributedLock;
+using MovieBooking.InfraStructure.Caching;
 using MovieBooking.InfraStructure.Cors;
 using MovieBooking.InfraStructure.Mailing;
 using MovieBooking.InfraStructure.Services;
+using StackExchange.Redis;
 
 namespace MovieBooking.InfraStructure;
 
@@ -17,8 +21,19 @@ public static class InfrastructureServiceExtensions
        .AddServices()
        .AddMailing(configuration)
        //.AddBackgroundJobs(configuration)
-       // .AddCaching(configuration)
+        .AddCaching(configuration)
        .AddScoped<IDateTimeService, DateTimeService>();
+        services.AddSingleton<IDistributedLockProvider>(provider =>
+        {
+            var connectionString = configuration.GetValue<string>("CacheSettings:RedisURL");
+            var options = ConfigurationOptions.Parse(connectionString);
+            options.AbortOnConnectFail = false;
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("RedisURL is missing in appsettings.json.");
+            }
+            return new RedisDistributedLockProvider(connectionString);
+        });
     }
 
     internal static IServiceCollection AddServices(this IServiceCollection services) =>
@@ -74,7 +89,7 @@ public static class InfrastructureServiceExtensions
     //public static IApplicationBuilder UseHangfire(this IApplicationBuilder builder, IConfiguration config)
     //{
     //    return builder
-    //        .UseHangfireDashboard(config);
+    //        .UseHangfire Dashboard(config);
     //}
 
     //public static IEndpointRouteBuilder UseInfraEndpoints(this IEndpointRouteBuilder builder)

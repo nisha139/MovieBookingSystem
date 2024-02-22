@@ -36,9 +36,9 @@ public static class IdentityServiceExtensions
 
         services.AddIdentity<User, ApplicationRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
 
-        //services
-        //  .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
-        //  .AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        services
+          .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
+          .AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
         services.AddAuthentication(options =>
          {

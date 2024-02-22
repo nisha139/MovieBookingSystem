@@ -13,8 +13,8 @@ namespace MovieBooking.Application.Contracts.Identity
     public interface IUserService : ITransientService
     {
         Task<ApiResponse<UserDetailsDto>> GetUserDetailsAsync(string userId, CancellationToken cancellationToken);
-        //Task<List<string>> GetPermissionAsync(string userId, CancellationToken cancellationToken);
-        //Task<bool> HasPermissionAsync(string? userId, string permission, CancellationToken cancellationToken = default);
+        Task<List<string>> GetPermissionAsync(string userId, CancellationToken cancellationToken);
+        Task<bool> HasPermissionAsync(string? userId, string permission, CancellationToken cancellationToken = default);
         Task<ApiResponse<string>> UpdateAsync(UpdateUserRequest request);
         Task<ApiResponse<string>> DeleteAsync(string userId);
         Task<IPagedDataResponse<UserListDto>> SearchAsync(UserListFilter filter, CancellationToken cancellationToken);

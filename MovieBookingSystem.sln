@@ -11,17 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{2AD94021-A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{DEEA57A8-A63A-4EDE-B5FE-10AD82034DF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Domain", "MovieBooking.Domain\MovieBooking.Domain.csproj", "{18B9074E-C240-406A-B901-1D5D2E1F83AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBooking.Domain", "MovieBooking.Domain\MovieBooking.Domain.csproj", "{18B9074E-C240-406A-B901-1D5D2E1F83AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Application", "MovieBooking.Application\MovieBooking.Application.csproj", "{DDAACAD3-001F-4B1A-B623-C2D3C126D77A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBooking.Application", "MovieBooking.Application\MovieBooking.Application.csproj", "{DDAACAD3-001F-4B1A-B623-C2D3C126D77A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Identity", "MovieBooking.Identity\MovieBooking.Identity.csproj", "{994CA9EF-AE19-4F04-A8FA-4B25FCA19E48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBooking.Identity", "MovieBooking.Identity\MovieBooking.Identity.csproj", "{994CA9EF-AE19-4F04-A8FA-4B25FCA19E48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Infrastructure", "MovieBooking.Infrastructure\MovieBooking.Infrastructure.csproj", "{C21DC6F7-7C44-424B-BD09-58F09DDEBAFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBooking.Infrastructure", "MovieBooking.Infrastructure\MovieBooking.Infrastructure.csproj", "{C21DC6F7-7C44-424B-BD09-58F09DDEBAFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Persistence", "MovieBooking.Persistence\MovieBooking.Persistence.csproj", "{290A1308-BCB4-4DD3-AF14-7062F2F75AAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBooking.Persistence", "MovieBooking.Persistence\MovieBooking.Persistence.csproj", "{290A1308-BCB4-4DD3-AF14-7062F2F75AAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBooking.Api", "MovieBooking.Api\MovieBooking.Api.csproj", "{53AA5BBA-FCED-4611-A1EA-DBD2EA4419B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBooking.Api", "MovieBooking.Api\MovieBooking.Api.csproj", "{53AA5BBA-FCED-4611-A1EA-DBD2EA4419B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

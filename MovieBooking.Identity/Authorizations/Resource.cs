@@ -13,5 +13,7 @@ public class Resource
     public const string Seat = nameof(Seat);
     public const string Movie = nameof(Movie);
     public const string Showtime = nameof(Showtime);
-    public const string Bookiing = nameof(Bookiing);
+    public const string Booking = nameof(Booking);
+    public const string Transaction = nameof(Transaction);
+    public const string PaymentMethod = nameof(PaymentMethod);
 }
