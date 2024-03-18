@@ -13,5 +13,7 @@ namespace MovieBooking.Application.Contracts.Persistence.Repositoris.Movie.Query
     public interface IMovieQueryRepository : IQueryRepository<Domain.Entities.Movie>
     {
         Task<IPagedDataResponse<MovieListDto>> SearchAsync(ISpecification<MovieListDto> spec, int pageNumber, int pageSize, CancellationToken cancellationToken);
+        Task<List<MovieBooking.Application.Features.Movie.Dto.MovieBooking>> GetAllMoviesAsync(CancellationToken cancellationToken);
     }
 }
+

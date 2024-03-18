@@ -16,6 +16,8 @@ using MovieBooking.Application.Models.Specification.Filters;
 using MovieBooking.Identity.Authorizations.Permissions;
 using MovieBooking.Identity.Authorizations;
 using Action = MovieBooking.Identity.Authorizations.Action;
+using MovieBooking.Application.Features.Movie.Queries;
+using MovieBooking.Application.Features.Seat.Query.GetSeatMainList;
 
 namespace MovieBooking.Api.Controllers
 {
@@ -23,11 +25,18 @@ namespace MovieBooking.Api.Controllers
     [ApiController]
     public class SeatController : BaseApiController
     {
-        [Authorize(Roles = "Administrator")]
-        [HttpGet("{id}")]
-        public async Task<ApiResponse<SeatDetailDto>> GetSeatDetails(Guid id)
+        [HttpGet]
+        public async Task<ActionResult<List<Domain.Entities.SeatMain>>> GetAllSeats()
         {
-            return await Mediator.Send(new GetSeatDetailsQueryRequest(id));
+            var query = new GetAllseatMainQuery();
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+        //[Authorize(Roles = "Administrator")]
+        [HttpGet("{id}")]
+        public async Task<ApiResponse<SeatMainDetailDto>> GetSeatDetails(Guid id)
+        {
+            return await Mediator.Send(new GetSeatMainDetailsQueryRequest(id));
         }
 
         //[Authorize(Roles = "Administrator")]

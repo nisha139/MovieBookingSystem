@@ -16,6 +16,7 @@ namespace MovieBooking.Application.MappingProfiles
             CreateMap<Domain.Entities.Theater, TheaterDto>();
             CreateMap<Domain.Entities.Showtime,ShowtimeDto>();
             CreateMap<Domain.Entities.Screen, ScreenDto>();
+            CreateMap<Domain.Entities.TheaterMain, TheaterMainDetailDto>();
         }
     }
 }

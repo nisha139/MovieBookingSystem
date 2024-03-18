@@ -65,6 +65,22 @@ namespace MovieBooking.Persistence.Repositories.Seat.Query
             return await context.seats.FindAsync(id);
         }
 
+        public async Task<List<MovieBooking.Application.Features.Seat.Dto.SeatMainDetailDto>> GetAllSeatMainAsync(CancellationToken cancellationToken)
+        {
+            var seats = await context.seatMains
+                .Select(seats => new MovieBooking.Application.Features.Seat.Dto.SeatMainDetailDto
+                {
+                    SeatId = seats.Id,
+                    ScreenId = seats.ScreenId,  
+                    Row = seats.Row,
+                    Column = seats.Column,
+                    Status = seats.Status
+                })
+                .ToListAsync(cancellationToken);
+
+            return seats;
+        }
+
 
     }
 }

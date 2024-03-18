@@ -61,6 +61,22 @@ namespace MovieBooking.Persistence.Repositories.ShowTIme.Query
             return availableShowTimes;
         }
 
+        public List<ShowTimeMainDetail> GetAvailableShowTimeMian(Guid movieId, Guid theaterId)
+        {
+            var availableShowTimes = context.showtimeMains
+                .Where(s => s.MovieId == movieId && s.Screen.theater.Id == theaterId)
+                .Select(s => new ShowTimeMainDetail
+                {
+                    ShowTimeId = s.Id,
+                    ScreenID = s.ScreenID,
+                    MovieId = s.MovieId,
+                    DateTime = s.DateTime
+                })
+                .ToList();
+
+            return availableShowTimes;
+        }
+
 
         public List<ShowTimeDetailDto> GetAvailableShowTimesForScreen(Guid movieId, Guid theaterId, Guid screenId) 
         {
@@ -76,6 +92,24 @@ namespace MovieBooking.Persistence.Repositories.ShowTIme.Query
                 .ToList();
 
             return availableShowTimes;
+        }
+
+        public async Task<List<ShowTimeMainDetail>> GetAllShowtimeMainAsync(CancellationToken cancellationToken)
+        {
+            var showtimeDetails = await context.showtimeMains
+                .Include(s => s.Screen) // Include Screen entity
+                .Include(s => s.Movie)  // Include Movie entity
+                .Select(seats => new ShowTimeMainDetail
+                {
+                    ShowTimeId = seats.Id,
+                    ScreenID = seats.ScreenID,
+                    MovieId = seats.MovieId,
+                    DateTime = seats.DateTime,// Access Screen Name
+                    MovieName = seats.Movie.Name    // Access Movie Name
+                })
+                .ToListAsync(cancellationToken);
+
+            return showtimeDetails;
         }
 
     }

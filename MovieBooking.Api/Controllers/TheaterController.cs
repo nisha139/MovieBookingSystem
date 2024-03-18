@@ -15,6 +15,9 @@ using MovieBooking.Application.Models.Specification.Filters;
 using MovieBooking.Identity.Authorizations.Permissions;
 using MovieBooking.Identity.Authorizations;
 using Action = MovieBooking.Identity.Authorizations.Action;
+using MovieBooking.Application.Features.Theater.Command.CreateTheater;
+using MovieBooking.Application.Features.Movie.Queries;
+using MovieBooking.Application.Features.Theater.Queries.GetAll;
 
 namespace MovieBooking.Api.Controllers
 {
@@ -22,20 +25,28 @@ namespace MovieBooking.Api.Controllers
     [ApiController]
     public class TheaterController : BaseApiController
     {
-        //[Authorize(Roles = "Administrator")]
-        [HttpGet("{id}")]
-        public async Task<ApiResponse<TheaterDetailDto>> GetTheaterDetails(Guid id)
+        [HttpGet]
+        public async Task<ActionResult<List<Domain.Entities.TheaterMain>>> GetAllTheaters()
         {
-            return await Mediator.Send(new GetTheaterDetailsQueryRequest(id));
+            var query = new GetAllTheaterQuery();
+            var result = await Mediator.Send(query);
+            return Ok(result);
         }
 
         //[Authorize(Roles = "Administrator")]
-        [HttpPost("Create")]
-        [MustHavePermission(Action.Create, Resource.Theater)]
-        public async Task<ApiResponse<int>> CreateTheater(CreateTheaterCommandRequest request)
+        [HttpGet("{id}")]
+        public async Task<ApiResponse<TheaterMainDetailDto>> GetTheaterDetails(Guid id)
         {
-            return await Mediator.Send(request);
+            return await Mediator.Send(new GetTheaterMainDetailsQueryRequest(id));
         }
+
+        //[Authorize(Roles = "Administrator")]
+        //[HttpPost("Create")]
+        //[MustHavePermission(Action.Create, Resource.Theater)]
+        //public async Task<ApiResponse<int>> CreateTheater(CreateTheaterCommandRequest request)
+        //{
+        //    return await Mediator.Send(request);
+        //}
 
         //[Authorize(Roles = "Administrator")]
         [HttpPost("Search")]
@@ -68,6 +79,12 @@ namespace MovieBooking.Api.Controllers
         public async Task<ApiResponse<string>> DeleteTheater(Guid id)
         {
             return await Mediator.Send(new DeleteTheaterCommandRequest(id));
+        }
+        [HttpPost("Create")]
+        [MustHavePermission(Action.Create, Resource.Theater)]
+        public async Task<ApiResponse<int>> CreateTheaters(CreateTheaterMainCommandRequest request)
+        {
+            return await Mediator.Send(request);
         }
         [Authorize(Roles = "Administrator,User")]
         [HttpGet("GetByMovieTitle/{title}")]

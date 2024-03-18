@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieBooking.Application.Features.Movie.Dto;
 using MovieBooking.Domain.Common.Constracts;
 using MovieBooking.Domain.Entities;
 using MovieBooking.Persistence.Interceptors;
@@ -29,6 +30,13 @@ namespace MovieBooking.Persistence.Database
         public DbSet<Seat> seats { get; set; }
         public DbSet<Showtime> showtimes { get; set; }
         public DbSet<Theater> Theater { get; set; }
+        public DbSet<Domain.Entities.MovieBooking> movieBookings { get; set; }
+        public DbSet<BookingMain> bookingMains { get; set; }
+        public DbSet<ScreenMain> screenMains { get; set; }
+        public DbSet<SeatMain> seatMains { get; set; }
+        public DbSet<ShowtimeMain> showtimeMains { get; set; }
+        public DbSet<TheaterMain> theaterMains { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);

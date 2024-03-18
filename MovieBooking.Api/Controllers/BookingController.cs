@@ -29,7 +29,7 @@ namespace MovieBooking.Api.Controllers
         [Authorize(Roles = "Administrator,User")]
         [HttpPost("Create")]
         //[MustHavePermission(Action.Create, Resource.Movie)]
-        public async Task<ApiResponse<int>> CreateBooking(CreateBookingCommandRequest request)
+        public async Task<ApiResponse<Guid>> CreateBooking(CreateBookingMainCommandRequest request)
         {
             return await Mediator.Send(request);
         }

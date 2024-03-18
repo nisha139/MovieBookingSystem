@@ -205,17 +205,17 @@ namespace MovieBooking.Identity.Services
             }
 
             // Optionally, assign roles to the new user if needed
-            var role = await _roleManager.FindByIdAsync(request.RoleId);
-            if (role == null)
-            {
-                throw new Exception($"Role with ID {request.RoleId} not found.");
-            }
+            //var role = await _roleManager.FindByIdAsync(request.RoleId);
+            //if (role == null)
+            //{
+            //    throw new Exception($"Role with ID {request.RoleId} not found.");
+            //}
 
-            var roleResult = await _userManager.AddToRoleAsync(newUser, role.Name);
-            if (!roleResult.Succeeded)
-            {
-                throw new Exception($"Failed to assign role to user: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
-            }
+            //var roleResult = await _userManager.AddToRoleAsync(newUser, role.Name);
+            //if (!roleResult.Succeeded)
+            //{
+            //    throw new Exception($"Failed to assign role to user: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
+            //}
 
             // Return a response indicating success
             return new ApiResponse<string>

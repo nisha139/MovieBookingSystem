@@ -14,6 +14,9 @@ namespace MovieBooking.Application.MappingProfiles
         public ShowTimeProfile()
         {
             CreateMap<Domain.Entities.Showtime, ShowTimeDetailDto>();
+            CreateMap<Domain.Entities.Showtime, ShowTimeDetailDto>();
+            CreateMap<Domain.Entities.ShowtimeMain, ShowTimeMainDetail>()
+                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.DateTime));
         }
     }
 }

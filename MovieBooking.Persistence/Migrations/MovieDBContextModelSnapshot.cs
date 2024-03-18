@@ -68,7 +68,55 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("ShowtimeID");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.BookingMain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("SeatMainId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ShowtimeID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeatMainId");
+
+                    b.HasIndex("ShowtimeID");
+
+                    b.ToTable("bookingMains");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Movie", b =>
@@ -122,7 +170,66 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("BookingId");
 
-                    b.ToTable("Movies", (string)null);
+                    b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.MovieBooking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BookingMainId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Duration")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Genre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingMainId");
+
+                    b.ToTable("movieBookings");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.PaymentMethod", b =>
@@ -162,7 +269,7 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethod", (string)null);
+                    b.ToTable("PaymentMethod");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Screen", b =>
@@ -202,7 +309,47 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("TheaterId");
 
-                    b.ToTable("Screens", (string)null);
+                    b.ToTable("Screens");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.ScreenMain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("TheaterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TheaterId");
+
+                    b.ToTable("screenMains");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Seat", b =>
@@ -249,7 +396,55 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("ScreenId");
 
-                    b.ToTable("seats", (string)null);
+                    b.ToTable("seats");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.SeatMain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Column")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Row")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ScreenId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScreenId");
+
+                    b.ToTable("seatMains");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Showtime", b =>
@@ -294,7 +489,52 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("ScreenID");
 
-                    b.ToTable("showtimes", (string)null);
+                    b.ToTable("showtimes");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.ShowtimeMain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ScreenID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("ScreenID");
+
+                    b.ToTable("showtimeMains");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Theater", b =>
@@ -337,7 +577,54 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Theater", (string)null);
+                    b.ToTable("Theater");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.TheaterMain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NoOfScreen")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("theaterMains");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Transaction", b =>
@@ -382,7 +669,7 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasIndex("PaymentMethodID");
 
-                    b.ToTable("Transaction", (string)null);
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("MovieBooking.Domain.Entities.Booking", b =>
@@ -400,6 +687,21 @@ namespace MovieBooking.Persistence.Migrations
                     b.Navigation("Showtime");
                 });
 
+            modelBuilder.Entity("MovieBooking.Domain.Entities.BookingMain", b =>
+                {
+                    b.HasOne("MovieBooking.Domain.Entities.SeatMain", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("SeatMainId");
+
+                    b.HasOne("MovieBooking.Domain.Entities.ShowtimeMain", "Showtime")
+                        .WithMany("Bookings")
+                        .HasForeignKey("ShowtimeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Showtime");
+                });
+
             modelBuilder.Entity("MovieBooking.Domain.Entities.Movie", b =>
                 {
                     b.HasOne("MovieBooking.Domain.Entities.Booking", null)
@@ -407,10 +709,28 @@ namespace MovieBooking.Persistence.Migrations
                         .HasForeignKey("BookingId");
                 });
 
+            modelBuilder.Entity("MovieBooking.Domain.Entities.MovieBooking", b =>
+                {
+                    b.HasOne("MovieBooking.Domain.Entities.BookingMain", null)
+                        .WithMany("movies")
+                        .HasForeignKey("BookingMainId");
+                });
+
             modelBuilder.Entity("MovieBooking.Domain.Entities.Screen", b =>
                 {
                     b.HasOne("MovieBooking.Domain.Entities.Theater", "theater")
                         .WithMany("Screens")
+                        .HasForeignKey("TheaterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("theater");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.ScreenMain", b =>
+                {
+                    b.HasOne("MovieBooking.Domain.Entities.TheaterMain", "theater")
+                        .WithMany("ScreenMains")
                         .HasForeignKey("TheaterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -429,6 +749,17 @@ namespace MovieBooking.Persistence.Migrations
                     b.Navigation("screen");
                 });
 
+            modelBuilder.Entity("MovieBooking.Domain.Entities.SeatMain", b =>
+                {
+                    b.HasOne("MovieBooking.Domain.Entities.ScreenMain", "screen")
+                        .WithMany("Seats")
+                        .HasForeignKey("ScreenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("screen");
+                });
+
             modelBuilder.Entity("MovieBooking.Domain.Entities.Showtime", b =>
                 {
                     b.HasOne("MovieBooking.Domain.Entities.Movie", "Movie")
@@ -439,6 +770,25 @@ namespace MovieBooking.Persistence.Migrations
 
                     b.HasOne("MovieBooking.Domain.Entities.Screen", "Screen")
                         .WithMany("Showtimes")
+                        .HasForeignKey("ScreenID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("Screen");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.ShowtimeMain", b =>
+                {
+                    b.HasOne("MovieBooking.Domain.Entities.MovieBooking", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieBooking.Domain.Entities.ScreenMain", "Screen")
+                        .WithMany("showtimeMains")
                         .HasForeignKey("ScreenID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -474,6 +824,11 @@ namespace MovieBooking.Persistence.Migrations
                     b.Navigation("movies");
                 });
 
+            modelBuilder.Entity("MovieBooking.Domain.Entities.BookingMain", b =>
+                {
+                    b.Navigation("movies");
+                });
+
             modelBuilder.Entity("MovieBooking.Domain.Entities.Movie", b =>
                 {
                     b.Navigation("Showtimes");
@@ -491,7 +846,19 @@ namespace MovieBooking.Persistence.Migrations
                     b.Navigation("Showtimes");
                 });
 
+            modelBuilder.Entity("MovieBooking.Domain.Entities.ScreenMain", b =>
+                {
+                    b.Navigation("Seats");
+
+                    b.Navigation("showtimeMains");
+                });
+
             modelBuilder.Entity("MovieBooking.Domain.Entities.Seat", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.SeatMain", b =>
                 {
                     b.Navigation("Bookings");
                 });
@@ -501,9 +868,19 @@ namespace MovieBooking.Persistence.Migrations
                     b.Navigation("Bookings");
                 });
 
+            modelBuilder.Entity("MovieBooking.Domain.Entities.ShowtimeMain", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
             modelBuilder.Entity("MovieBooking.Domain.Entities.Theater", b =>
                 {
                     b.Navigation("Screens");
+                });
+
+            modelBuilder.Entity("MovieBooking.Domain.Entities.TheaterMain", b =>
+                {
+                    b.Navigation("ScreenMains");
                 });
 #pragma warning restore 612, 618
         }

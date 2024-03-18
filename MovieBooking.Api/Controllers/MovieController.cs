@@ -14,6 +14,8 @@ using MovieBooking.Identity.Authorizations.Permissions;
 using MovieBooking.Identity.Authorizations;
 using Action = MovieBooking.Identity.Authorizations.Action;
 using Microsoft.AspNetCore.Authorization;
+using MovieBooking.Application.Features.Movie.Queries;
+using MovieBooking.Application.Features.Movie.Query.GetMovieByID;
 
 namespace MovieBooking.Api.Controllers
 {
@@ -26,28 +28,41 @@ namespace MovieBooking.Api.Controllers
         {
             return await Mediator.Send(new GetMovieDetailsQueryRequest(id));
         }
-       // [Authorize(Roles ="Administrator")]
-        [HttpPost("Create")]
-        [MustHavePermission(Action.Create, Resource.Movie)]     
-        public async Task<ApiResponse<int>> CreateMovie(CreateMovieCommandRequest request)
-        {
-            return await Mediator.Send(request);
-        }
+        // [Authorize(Roles ="Administrator")]
+        //[HttpPost("Create")]
+        //[MustHavePermission(Action.Create, Resource.Movie)]     
+        //public async Task<ApiResponse<int>> CreateMovie(CreateMovieCommandRequest request)
+        //{
+        //    return await Mediator.Send(request);
+        //}
+
+        //[HttpGet("{id}")]
+        //public async Task<ApiResponse<MovieBooking.Application.Features.Movie.Dto. MovieBooking>> GetMovieDetail(Guid id)
+        //{
+        //    return await Mediator.Send(new GetMovieBookingDetailsQueryRequest(id));
+        //}
 
         //[Authorize(Roles = "Administrator")]
-        [HttpPut("{id}")]
-        [MustHavePermission(Action.Update, Resource.Movie)]
-        public async Task<ApiResponse<string>> UpdateMovie(Guid id, UpdateMovieRequestCommand request)
+        //[HttpPut("{id}")]
+        //[MustHavePermission(Action.Update, Resource.Movie)]
+        //public async Task<ApiResponse<string>> UpdateMovie(Guid id, UpdateMovieRequestCommand request)
+        //{
+        //    if (id != request.Id)
+        //    {
+        //        return new ApiResponse<string>
+        //        {
+        //            Success = false,
+        //            Data = "The provided ID in the route does not match the ID in the request body.",
+        //            StatusCode = HttpStatusCodes.BadRequest
+        //        };
+        //    }
+        //    return await Mediator.Send(request);
+        //}
+        [Authorize(Roles = "Administrator")]
+        [HttpPost("Create")]
+        //[MustHavePermission(Action.Create, Resource.Movie)]
+        public async Task<ApiResponse<int>> CreateMovieBooking(CreateMovieBookingCommandRequest request)
         {
-            if (id != request.Id)
-            {
-                return new ApiResponse<string>
-                {
-                    Success = false,
-                    Data = "The provided ID in the route does not match the ID in the request body.",
-                    StatusCode = HttpStatusCodes.BadRequest
-                };
-            }
             return await Mediator.Send(request);
         }
 
@@ -66,5 +81,30 @@ namespace MovieBooking.Api.Controllers
         {
             return await Mediator.Send(new DeleteMovieCommandRequest(id));
         }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Domain.Entities.MovieBooking>>> GetAllMovies()
+        {
+            var query = new GetAllMoviesQuery();
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")]
+        //[MustHavePermission(Action.Update, Resource.Movie)]
+        public async Task<ApiResponse<string>> UpdateMovies(Guid id, UpdateMovieBookingCommandRequest request)
+        {
+            if (id != request.Id)
+            {
+                return new ApiResponse<string>
+                {
+                    Success = false,
+                    Data = "The provided ID in the route does not match the ID in the request body.",
+                    StatusCode = HttpStatusCodes.BadRequest
+                };
+            }
+            return await Mediator.Send(request);
+        }
+
     }
 }
