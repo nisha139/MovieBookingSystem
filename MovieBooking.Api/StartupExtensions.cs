@@ -11,6 +11,7 @@ using MovieBooking.Application.Contracts.Identity;
 using MovieBooking.Identity.Services;
 using MovieBooking.Application.Contracts.Caching;
 using MovieBooking.API.Middlewares;
+using MovieBooking.Application.Contracts.Persistence.Repositoris.Base;
 namespace MovieBooking.Api
 {
     public  static class StartupExtensions
@@ -24,6 +25,8 @@ namespace MovieBooking.Api
             builder.Services.AddInfrastructureSharedServices(builder.Configuration);
             builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 ;           builder.Services.AddHttpContextAccessor();
+            
+
 
             builder.Services.AddControllers();
             //builder.Services.AddAuthorization(options =>

@@ -15,13 +15,13 @@ namespace MovieBooking.Application.Features.ShowTimes.Command.Create
         private readonly ICommandUnitOfWork _commandUnitofWork = command;
         public async Task<ApiResponse<int>> Handle(CreateShowTimeCommandRequest request, CancellationToken cancellationToken)
         {
-            var entity = new Domain.Entities.Showtime
+            var entity = new Domain.Entities.ShowtimeMain
             {
                 ScreenID = request.ScreenID,
                 MovieId = request.MovieId,
                 DateTime = request.DateTime,
             };
-            await _commandUnitofWork.CommandRepository<Domain.Entities.Showtime>().AddAsync(entity);
+            await _commandUnitofWork.CommandRepository<Domain.Entities.ShowtimeMain>().AddAsync(entity);
             var saveResult = await _commandUnitofWork.SaveAsync(cancellationToken);
             var response = new ApiResponse<int>
             {

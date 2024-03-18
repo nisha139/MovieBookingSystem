@@ -13,6 +13,7 @@ namespace MovieBooking.Application.MappingProfiles
         public MovieProfile()
         {
             CreateMap<Domain.Entities.Movie, MovieDetailDto>();
+            
         }
     }
 }

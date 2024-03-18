@@ -43,5 +43,22 @@ namespace MovieBooking.Persistence.Repositories.Movie.Query
 
             return new PagedApiResponse<MovieListDto>(count, pageNumber, pageSize) { Data = movies };
         }
+        public async Task<List<MovieBooking.Application.Features.Movie.Dto.MovieBooking>> GetAllMoviesAsync(CancellationToken cancellationToken)
+        {
+            var movies = await context.movieBookings
+                .Select(movie => new MovieBooking.Application.Features.Movie.Dto.MovieBooking
+                {
+                    Id = movie.Id,
+                    Name = movie.Name,
+                    ImageUrl = movie.ImageUrl,
+                    ReleaseDate = movie.ReleaseDate,
+                    Genre = movie.Genre,
+                    Duration = movie.Duration,
+                    IsActive = movie.IsActive
+                })
+                .ToListAsync(cancellationToken);
+
+            return movies;
+        }
     }
 }

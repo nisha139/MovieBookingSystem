@@ -22,6 +22,22 @@ namespace MovieBooking.Persistence.Repositories.Theater.Query
         public TheaterQueryRepository(MovieDBContext context) : base(context)
         { }
 
+        public async Task<List<MovieBooking.Application.Features.Theater.Dto.TheaterMainDto>> GetAllTheaterAsync(CancellationToken cancellationToken)
+        {
+            var theaters = await context.theaterMains
+                .Select(theater => new MovieBooking.Application.Features.Theater.Dto.TheaterMainDto
+                {
+                    Id = theater.Id,
+                    Name = theater.Name,
+                    Location= theater.Location,
+                    NoOfScreen= theater.NoOfScreen,
+                    ImageUrl = theater.ImageUrl,
+                })
+                .ToListAsync(cancellationToken);
+
+            return theaters;
+        }
+
         public async Task<IPagedDataResponse<TheaterListDto>> SearchAsync(ISpecification<TheaterListDto> spec, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             var theaterListQuery = context.Theater.AsNoTracking()

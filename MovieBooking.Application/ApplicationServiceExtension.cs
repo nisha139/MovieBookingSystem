@@ -3,6 +3,9 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MovieBooking.Application.Behaviours;
+using MovieBooking.Application.Features.Movie.Queries;
+using MovieBooking.Application.Features.Movie.Dto;
+
 
 namespace MovieBooking.Application
 {
@@ -16,9 +19,11 @@ namespace MovieBooking.Application
             // Register LoggingBehaviour as a pipeline behavior
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
 
+
             // Configure MediatR with behaviors
             services.AddMediatR(cfg =>
             {
+
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
@@ -27,6 +32,7 @@ namespace MovieBooking.Application
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
             });
 
             return services;

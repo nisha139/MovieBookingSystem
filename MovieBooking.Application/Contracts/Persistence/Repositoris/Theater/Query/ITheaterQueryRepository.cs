@@ -14,6 +14,8 @@ namespace MovieBooking.Application.Contracts.Persistence.Repositoris.Theater.Que
     public interface ITheaterQueryRepository : IQueryRepository<Domain.Entities.Theater>
     {
         Task<IPagedDataResponse<TheaterListDto>> SearchAsync(ISpecification<TheaterListDto> spec, int pageNumber, int pageSize, CancellationToken cancellationToken);
+        Task<List<MovieBooking.Application.Features.Theater.Dto.TheaterMainDto>> GetAllTheaterAsync(CancellationToken cancellationToken);
+
     }
-    
+
 }

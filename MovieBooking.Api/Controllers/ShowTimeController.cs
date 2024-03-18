@@ -16,6 +16,8 @@ using MovieBooking.Application.Models.Specification.Filters;
 using MovieBooking.Identity.Authorizations.Permissions;
 using MovieBooking.Identity.Authorizations;
 using Action = MovieBooking.Identity.Authorizations.Action;
+using MovieBooking.Application.Features.Seat.Query.GetSeatMainList;
+using MovieBooking.Application.Features.ShowTimes.Query.GetAllShowTime;
 
 namespace MovieBooking.Api.Controllers
 {
@@ -23,11 +25,19 @@ namespace MovieBooking.Api.Controllers
     [ApiController]
     public class ShowTimeController : BaseApiController
     {
+        [HttpGet]
+        public async Task<ActionResult<List<Domain.Entities.ShowtimeMain>>> GetAllShowtimes()
+        
+        {
+            var query = new GetAllShowTimeMainQuery();
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
         //[Authorize(Roles = "Administrator")]
         [HttpGet("{id}")]
-        public async Task<ApiResponse<ShowTimeDetailDto>> GetShowTimeDetails(Guid id)
+        public async Task<ApiResponse<ShowTimeMainDetail>> GetShowTimeDetails(Guid id)
         {
-            return await Mediator.Send(new GetShowTimeDetailsQueryRequest(id));
+            return await Mediator.Send(new GetShowTimeMainDetailsQueryRequest(id));
         }
 
         //[Authorize(Roles = "Administrator")]
